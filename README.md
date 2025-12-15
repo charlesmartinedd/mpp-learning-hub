@@ -72,4 +72,4 @@ open index.html
 
 ## License
 
-Developed by [Alexandria's Design](https://alexandriasdesign.com) for DoD MPP training programs.
+Developed for DoD MPP training programs.
