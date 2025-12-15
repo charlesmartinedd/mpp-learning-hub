@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoD Mentor-Protégé Program Glossary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-900: #0f172a;
+            --navy-800: #1e293b;
+            --navy-700: #1e3a5f;
+            --navy-600: #2d4a6f;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --warm-50: #fefdfb;
+            --accent: #2563eb;
+            --accent-light: #3b82f6;
+            --accent-subtle: #dbeafe;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--warm-50) 0%, #f8fafc 50%, #f1f5f9 100%);
+            color: var(--navy-900);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .glossary-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--navy-900);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            color: var(--slate-500);
+            font-size: 0.9375rem;
+        }
+
+        /* Letter Grid */
+        .letter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .letter-card {
+            background: linear-gradient(145deg, var(--navy-700) 0%, var(--navy-800) 100%);
+            border-radius: 12px;
+            padding: 1.25rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .letter-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            background: linear-gradient(145deg, var(--navy-600) 0%, var(--navy-700) 100%);
+        }
+
+        .letter-card.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: linear-gradient(145deg, var(--slate-400) 0%, var(--slate-500) 100%);
+        }
+
+        .letter-card.disabled:hover {
+            transform: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .letter {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.25rem;
+            position: relative;
+        }
+
+        .term-count {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            position: relative;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Modal */
+        .modal {
+            background: white;
+            border-radius: 16px;
+            max-width: 700px;
+            width: 94%;
+            max-height: 85vh;
+            overflow: hidden;
+            transform: scale(0.95) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--slate-200);
+            background: var(--slate-100);
+        }
+
+        .modal-header h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--navy-900);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--slate-400);
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        /* Terms Grid in Modal */
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .term-card {
+            background: white;
+            border: 1px solid var(--slate-200);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            color: var(--navy-800);
+            font-size: 0.875rem;
+        }
+
+        .term-card:hover {
+            border-color: var(--accent);
+            background: var(--accent-subtle);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+
+        /* Definition Modal */
+        .definition-content {
+            padding: 0.5rem 0;
+        }
+
+        .definition-expansion {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--navy-700);
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--slate-200);
+        }
+
+        .definition-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--slate-600);
+            margin-bottom: 1.5rem;
+        }
+
+        .definition-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .definition-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--slate-400);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .related-terms {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .related-term {
+            background: var(--accent-subtle);
+            color: var(--accent);
+            padding: 0.375rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .related-term:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .module-refs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .module-ref {
+            background: var(--slate-100);
+            color: var(--slate-600);
+            padding: 0.25rem 0.625rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--slate-100);
+            border: 1px solid var(--slate-200);
+            padding: 0.625rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--slate-600);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 1rem;
+        }
+
+        .back-btn:hover {
+            background: var(--slate-200);
+            color: var(--navy-800);
+        }
+
+        /* Category badge */
+        .category-badge {
+            display: inline-block;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-left: 0.75rem;
+        }
+
+        .category-badge.Acronym { background: #dbeafe; color: #1d4ed8; }
+        .category-badge.Role { background: #fef3c7; color: #b45309; }
+        .category-badge.Agreement { background: #d1fae5; color: #047857; }
+        .category-badge.Report { background: #e0e7ff; color: #4338ca; }
+        .category-badge.Financial { background: #fce7f3; color: #be185d; }
+        .category-badge.Form { background: #f3e8ff; color: #7c3aed; }
+        .category-badge.Process { background: #ccfbf1; color: #0d9488; }
+        .category-badge.Regulatory { background: #fee2e2; color: #dc2626; }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .letter-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                gap: 0.75rem;
+            }
+
+            .letter-card {
+                padding: 1rem 0.75rem;
+            }
+
+            .letter {
+                font-size: 1.5rem;
+            }
+
+            .modal {
+                width: 98%;
+                max-height: 90vh;
+            }
+
+            .terms-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: var(--navy-700);
+            color: white;
+            border: none;
+            padding: 0.625rem 1rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 1000;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn:hover {
+            background: var(--navy-900);
+            transform: translateX(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Hub
+    </a>
+    <div class="glossary-container">
+        <header class="header">
+            <h1>DoD Mentor-Protégé Program Glossary</h1>
+            <p>Select a letter to explore terms and definitions</p>
+        </header>
+
+        <div class="letter-grid" id="letterGrid">
+            <!-- Generated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div class="modal-overlay" id="termsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="termsModalTitle">Terms Starting with "A"</h2>
+                <button class="close-btn" onclick="closeTermsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="terms-grid" id="termsGrid">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Definition Modal -->
+    <div class="modal-overlay" id="definitionModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="definitionModalTitle">Term</h2>
+                <button class="close-btn" onclick="closeDefinitionModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="definition-content" id="definitionContent">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive MPP Glossary Data
+        const glossaryData = [
+            // ACRONYMS
+            {
+                term: "APEX",
+                expansion: "APEX Accelerators (formerly Procurement Technical Assistance Centers)",
+                definition: "A nationwide network of centers that provide assistance to businesses seeking to sell products and services to federal, state, and local governments. APEX Accelerators help Protégés navigate the government contracting process.",
+                category: "Acronym",
+                relatedTerms: ["SBDCs", "Protégé", "Small Business"],
+                modules: [8]
+            },
+            {
+                term: "CNA",
+                expansion: "Comprehensive Needs Assessment",
+                definition: "A detailed evaluation document that identifies the specific developmental needs of a Protégé firm. The CNA forms the foundation of the Mentor-Protégé Agreement by documenting capability gaps that the Mentor will help address.",
+                category: "Acronym",
+                relatedTerms: ["DAP", "MPA", "Protégé"],
+                modules: [4, 7]
+            },
+            {
+                term: "COR",
+                expansion: "Contracting Officer's Representative",
+                definition: "An individual designated by the Contracting Officer to assist in the technical monitoring and administration of a contract. The COR monitors Mentor-Protégé Agreement performance and reports issues to the Contracting Officer.",
+                category: "Role",
+                relatedTerms: ["KO", "TPOC", "Contract Administration"],
+                modules: [2, 9]
+            },
+            {
+                term: "DAP",
+                expansion: "Developmental Assistance Plan",
+                definition: "A comprehensive plan outlining the specific assistance a Mentor will provide to a Protégé. The DAP must align with the CNA and include measurable milestones, timelines, and expected outcomes for capability development.",
+                category: "Acronym",
+                relatedTerms: ["CNA", "MPA", "Developmental Assistance"],
+                modules: [4, 7]
+            },
+            {
+                term: "DARQ",
+                expansion: "Deficiency and Reconciliation Query",
+                definition: "A formal process used to identify and resolve discrepancies in program data, financial reports, or agreement documentation. DARQs ensure data integrity and compliance across the Mentor-Protégé Program.",
+                category: "Process",
+                relatedTerms: ["MER", "SAR", "Compliance"],
+                modules: [5, 6]
+            },
+            {
+                term: "DCMA",
+                expansion: "Defense Contract Management Agency",
+                definition: "A Department of Defense agency responsible for contract administration and oversight. In the MPP context, DCMA reviews Semi-Annual Reports (SARs), reconciles data, and assigns risk ratings (LOW/MODERATE/HIGH) to Mentor-Protégé Agreements.",
+                category: "Acronym",
+                relatedTerms: ["SAR", "Risk Rating", "PMR"],
+                modules: [2, 3, 6, 8]
+            },
+            {
+                term: "DFARS",
+                expansion: "Defense Federal Acquisition Regulation Supplement",
+                definition: "The DoD supplement to the Federal Acquisition Regulation (FAR) that contains acquisition policies and procedures specific to the Department of Defense. DFARS Appendix I governs the Mentor-Protégé Program.",
+                category: "Regulatory",
+                relatedTerms: ["FAR", "Appendix I", "Regulatory"],
+                modules: [1, 3, 4, 5, 7, 8, 9]
+            },
+            {
+                term: "DoD",
+                expansion: "Department of Defense",
+                definition: "The executive branch department of the federal government responsible for coordinating and supervising all agencies and functions directly related to national security and the United States Armed Forces.",
+                category: "Acronym",
+                relatedTerms: ["OSBP", "Military Department", "Defense Agency"],
+                modules: [1, 2]
+            },
+            {
+                term: "FAR",
+                expansion: "Federal Acquisition Regulation",
+                definition: "The primary regulation used by federal executive agencies for acquiring goods and services with appropriated funds. FAR 31.109 addresses advance agreements relevant to MPP cost accounting.",
+                category: "Regulatory",
+                relatedTerms: ["DFARS", "Contracting", "Regulatory"],
+                modules: [5, 7, 9]
+            },
+            {
+                term: "FS 7600A",
+                expansion: "Interagency Agreement Form 7600A",
+                definition: "A standard government form used to establish interagency support agreements between federal agencies. Used in the MPP for formalizing funding transfers and support arrangements.",
+                category: "Form",
+                relatedTerms: ["FS 7600B", "MIPR", "Interagency Agreement"],
+                modules: [5]
+            },
+            {
+                term: "FS 7600B",
+                expansion: "Interagency Agreement Form 7600B",
+                definition: "The order form used in conjunction with FS 7600A to document specific services or support requested under an interagency agreement.",
+                category: "Form",
+                relatedTerms: ["FS 7600A", "MIPR", "Interagency Agreement"],
+                modules: [5]
+            },
+            {
+                term: "HBCUs",
+                expansion: "Historically Black Colleges and Universities",
+                definition: "Institutions of higher education established before 1964 with the principal mission of educating Black Americans. HBCUs are valued partners in the MPP for developing diverse small business capabilities.",
+                category: "Acronym",
+                relatedTerms: ["MSIs", "Protégé", "Third-Party"],
+                modules: [8]
+            },
+            {
+                term: "HUBZone",
+                expansion: "Historically Underutilized Business Zone",
+                definition: "A program that helps small businesses in urban and rural communities gain preferential access to federal procurement opportunities. HUBZone businesses receive a 4x credit multiplier in the MPP.",
+                category: "Acronym",
+                relatedTerms: ["Credit Multiplier", "Small Business", "8(a)"],
+                modules: [1, 8]
+            },
+            {
+                term: "KO",
+                expansion: "Contracting Officer",
+                definition: "A government official with the authority to enter into, administer, and terminate contracts. The KO has final approval authority for Mentor-Protégé Agreements and modifications.",
+                category: "Role",
+                relatedTerms: ["COR", "TPOC", "Contract Administration"],
+                modules: [2, 9]
+            },
+            {
+                term: "MER",
+                expansion: "Monthly Execution Report",
+                definition: "A monthly financial report submitted by Mentors documenting expenditures against the approved spend plan. MERs track obligated funds, disbursements, and remaining balances for reimbursable agreements.",
+                category: "Report",
+                relatedTerms: ["SAR", "PMR", "Financial Management"],
+                modules: [5, 6]
+            },
+            {
+                term: "MIPR",
+                expansion: "Military Interdepartmental Purchase Request",
+                definition: "A document used to order goods or services from one military department or defense agency to another. DD 448 is the MIPR form used for funding transfers in the MPP.",
+                category: "Acronym",
+                relatedTerms: ["DD 448", "Funding", "Interagency"],
+                modules: [5]
+            },
+            {
+                term: "MPA",
+                expansion: "Mentor-Protégé Agreement",
+                definition: "The formal written agreement between a Mentor and Protégé that documents the developmental assistance plan, milestones, reporting requirements, and terms of the relationship. MPAs require DoD OSBP approval.",
+                category: "Agreement",
+                relatedTerms: ["Mentor", "Protégé", "DAP", "CNA"],
+                modules: [1, 3, 4]
+            },
+            {
+                term: "MPP",
+                expansion: "Mentor-Protégé Program",
+                definition: "The DoD program that incentivizes major defense contractors (Mentors) to provide developmental assistance to small disadvantaged businesses (Protégés) to enhance their capabilities and competitiveness.",
+                category: "Acronym",
+                relatedTerms: ["Mentor", "Protégé", "OSBP"],
+                modules: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+            },
+            {
+                term: "MSIs",
+                expansion: "Minority Serving Institutions",
+                definition: "Colleges and universities serving a significant percentage of minority students. MSIs partner with the MPP to provide specialized training and support to Protégé firms.",
+                category: "Acronym",
+                relatedTerms: ["HBCUs", "Protégé", "Third-Party"],
+                modules: [8]
+            },
+            {
+                term: "OSBP",
+                expansion: "Office of Small Business Programs",
+                definition: "The DoD office responsible for policy and oversight of small business programs including the Mentor-Protégé Program. The Director of OSBP has final approval authority for all MPP agreements.",
+                category: "Acronym",
+                relatedTerms: ["Director DoD OSBP", "Small Business", "Policy"],
+                modules: [1, 2, 5]
+            },
+            {
+                term: "PM",
+                expansion: "Program Manager",
+                definition: "In the MPP context, the Service or Agency official responsible for managing Mentor-Protégé Agreements within their organization. PMs review proposals, monitor performance, and coordinate with OSBP.",
+                category: "Role",
+                relatedTerms: ["OSBP", "KO", "Agreement Management"],
+                modules: [2, 3, 4, 6, 9]
+            },
+            {
+                term: "PMR",
+                expansion: "Program Management Review",
+                definition: "Quarterly meetings to assess the progress of Mentor-Protégé Agreements. PMRs evaluate milestone achievement, identify issues, and ensure agreements remain on track.",
+                category: "Report",
+                relatedTerms: ["QAR", "SAR", "Performance Monitoring"],
+                modules: [3, 6]
+            },
+            {
+                term: "QAR",
+                expansion: "Quarterly Agreement Review",
+                definition: "A quarterly assessment of individual Mentor-Protégé Agreement performance conducted by the Service/Agency PM. QARs feed into the broader PMR process.",
+                category: "Report",
+                relatedTerms: ["PMR", "SAR", "Performance Monitoring"],
+                modules: [6]
+            },
+            {
+                term: "ROM",
+                expansion: "Rough Order of Magnitude",
+                definition: "A preliminary cost estimate used in the early stages of agreement planning. ROM estimates help establish budget expectations before detailed cost analysis.",
+                category: "Financial",
+                relatedTerms: ["Budget", "Cost Estimate", "Spend Plan"],
+                modules: [4, 5]
+            },
+            {
+                term: "SAR",
+                expansion: "Semi-Annual Report",
+                definition: "A comprehensive report submitted every six months documenting Mentor-Protégé Agreement progress. SARs include 12 required elements covering milestone achievement, financial status, and developmental outcomes.",
+                category: "Report",
+                relatedTerms: ["MER", "PMR", "DCMA"],
+                modules: [3, 5, 6, 8]
+            },
+            {
+                term: "SBA",
+                expansion: "Small Business Administration",
+                definition: "The federal agency that provides support to small businesses. The SBA's 8(a) program certifies economically disadvantaged small businesses eligible for special contracting opportunities.",
+                category: "Acronym",
+                relatedTerms: ["8(a)", "Small Business", "Certification"],
+                modules: [1, 8]
+            },
+            {
+                term: "SBDCs",
+                expansion: "Small Business Development Centers",
+                definition: "A nationwide network of centers providing free business consulting and low-cost training to small businesses. SBDCs can provide additional support to Protégé firms beyond Mentor assistance.",
+                category: "Acronym",
+                relatedTerms: ["APEX", "Protégé", "Small Business"],
+                modules: [8]
+            },
+            {
+                term: "SDVOSB",
+                expansion: "Service-Disabled Veteran-Owned Small Business",
+                definition: "A small business owned and controlled by one or more service-disabled veterans. SDVOSBs receive a 3x credit multiplier in the Mentor-Protégé Program.",
+                category: "Acronym",
+                relatedTerms: ["Credit Multiplier", "Veteran", "Small Business"],
+                modules: [1, 8]
+            },
+            {
+                term: "SF 294",
+                expansion: "Standard Form 294 - Subcontracting Report for Individual Contracts",
+                definition: "A government form used to report subcontracting achievements on individual contracts. Mentors use SF 294 to document subcontracting with Protégés.",
+                category: "Form",
+                relatedTerms: ["SF 295", "Subcontracting", "Reporting"],
+                modules: [8]
+            },
+            {
+                term: "SF 295",
+                expansion: "Standard Form 295 - Summary Subcontract Report",
+                definition: "A government form summarizing a contractor's overall subcontracting performance. SF 295 aggregates subcontracting data across all contracts.",
+                category: "Form",
+                relatedTerms: ["SF 294", "Subcontracting", "Reporting"],
+                modules: [8]
+            },
+            {
+                term: "SF 1449",
+                expansion: "Standard Form 1449 - Solicitation/Contract/Order for Commercial Products and Services",
+                definition: "The standard government form used for solicitations and contracts for commercial products and services. Used in MPP contract documentation.",
+                category: "Form",
+                relatedTerms: ["Contract", "Solicitation", "Commercial"],
+                modules: [9]
+            },
+            {
+                term: "SOP",
+                expansion: "Standard Operating Procedures",
+                definition: "The official document that establishes detailed procedures for administering the DoD Mentor-Protégé Program. The MPP SOP provides guidance on agreement development, approval, and management.",
+                category: "Acronym",
+                relatedTerms: ["DFARS", "Policy", "Procedures"],
+                modules: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+            },
+            {
+                term: "TPOC",
+                expansion: "Technical Point of Contact",
+                definition: "The individual designated to provide technical guidance and oversight for a Mentor-Protégé Agreement. The TPOC monitors technical aspects of developmental assistance delivery.",
+                category: "Role",
+                relatedTerms: ["COR", "KO", "Technical Oversight"],
+                modules: [2, 9]
+            },
+            // ROLES
+            {
+                term: "Associate Director",
+                expansion: "Associate Director, DoD OSBP",
+                definition: "The senior official with approval authority for Mentor-Protégé Agreements below certain dollar thresholds. The Associate Director reviews and approves agreements up to $1M (or $750K per training discrepancy).",
+                category: "Role",
+                relatedTerms: ["Director DoD OSBP", "OSBP", "Approval Authority"],
+                modules: [2]
+            },
+            {
+                term: "Director DoD OSBP",
+                expansion: "Director, Office of Small Business Programs",
+                definition: "The senior DoD official responsible for small business policy and the Mentor-Protégé Program. The Director has final approval authority for all MPP agreements and policy decisions.",
+                category: "Role",
+                relatedTerms: ["OSBP", "Associate Director", "Policy"],
+                modules: [1, 2, 5]
+            },
+            {
+                term: "Mentor",
+                expansion: null,
+                definition: "A prime contractor that has been approved to provide developmental assistance to a Protégé firm under the DoD Mentor-Protégé Program. Mentors must meet eligibility requirements in DFARS Appendix I-102.",
+                category: "Role",
+                relatedTerms: ["Protégé", "MPA", "Prime Contractor"],
+                modules: [1, 4, 7, 8]
+            },
+            {
+                term: "Protégé",
+                expansion: null,
+                definition: "A small disadvantaged business that receives developmental assistance from a Mentor under the DoD Mentor-Protégé Program. Protégés must meet eligibility requirements defined in DFARS Appendix I-104.",
+                category: "Role",
+                relatedTerms: ["Mentor", "MPA", "Small Business"],
+                modules: [1, 4, 7, 8]
+            },
+            // AGREEMENT TYPES
+            {
+                term: "Credit Agreement",
+                expansion: null,
+                definition: "A type of Mentor-Protégé Agreement where the Mentor provides developmental assistance at no cost to the government and receives subcontracting credit toward small business goals. Credit multipliers (4x, 3x, 2x) apply based on Protégé category.",
+                category: "Agreement",
+                relatedTerms: ["Reimbursable Agreement", "Hybrid Agreement", "Credit Multiplier"],
+                modules: [1, 3, 8]
+            },
+            {
+                term: "Credit Multiplier",
+                expansion: null,
+                definition: "A factor applied to developmental assistance costs for subcontracting credit purposes. Multipliers are: 4x for HUBZone and 8(a) firms, 3x for SDVOSBs, and 2x for other small businesses (per DFARS I-109).",
+                category: "Financial",
+                relatedTerms: ["Credit Agreement", "Subcontracting", "HUBZone"],
+                modules: [8]
+            },
+            {
+                term: "Hybrid Agreement",
+                expansion: null,
+                definition: "A Mentor-Protégé Agreement that combines elements of both credit and reimbursable arrangements. Hybrid agreements allow flexibility in funding developmental assistance activities.",
+                category: "Agreement",
+                relatedTerms: ["Credit Agreement", "Reimbursable Agreement", "MPA"],
+                modules: [1, 3]
+            },
+            {
+                term: "Reimbursable Agreement",
+                expansion: null,
+                definition: "A type of Mentor-Protégé Agreement where the government reimburses the Mentor for approved developmental assistance costs. Requires DoD funding allocation and detailed financial reporting.",
+                category: "Agreement",
+                relatedTerms: ["Credit Agreement", "Hybrid Agreement", "Funding"],
+                modules: [1, 3, 5]
+            },
+            // PROCESSES
+            {
+                term: "5-Year Recertification",
+                expansion: null,
+                definition: "The process by which an approved Mentor must renew their eligibility status every five years. Recertification ensures Mentors continue to meet program requirements and maintain good standing.",
+                category: "Process",
+                relatedTerms: ["Mentor", "Eligibility", "Approval"],
+                modules: [4]
+            },
+            {
+                term: "Agreement Lifecycle",
+                expansion: null,
+                definition: "The complete progression of a Mentor-Protégé Agreement from development through approval, execution, monitoring, and closeout or termination. Understanding the lifecycle is essential for effective agreement management.",
+                category: "Process",
+                relatedTerms: ["MPA", "Approval Process", "Closeout"],
+                modules: [1, 4, 9]
+            },
+            {
+                term: "Annual Review",
+                expansion: null,
+                definition: "A comprehensive yearly assessment of Mentor-Protégé Agreement performance conducted by DoD OSBP. Annual reviews evaluate progress, outcomes, and continued viability of agreements.",
+                category: "Report",
+                relatedTerms: ["SAR", "PMR", "Performance"],
+                modules: [3, 6]
+            },
+            {
+                term: "Approval Process",
+                expansion: null,
+                definition: "The multi-stage review and approval workflow for Mentor-Protégé Agreements. The process includes white paper submission, full proposal review, and final approval by DoD OSBP.",
+                category: "Process",
+                relatedTerms: ["White Paper", "Proposal", "OSBP"],
+                modules: [3, 4]
+            },
+            {
+                term: "Closeout",
+                expansion: null,
+                definition: "The formal process of completing and closing a Mentor-Protégé Agreement. Closeout includes final reporting, financial reconciliation, and documentation of outcomes achieved.",
+                category: "Process",
+                relatedTerms: ["Termination", "Final Report", "Reconciliation"],
+                modules: [5, 9]
+            },
+            {
+                term: "Contract Modification",
+                expansion: null,
+                definition: "A formal change to an existing Mentor-Protégé Agreement. Modifications may include changes to milestones, funding, period of performance, or other agreement terms and require KO approval.",
+                category: "Process",
+                relatedTerms: ["KO", "Agreement", "Amendment"],
+                modules: [9]
+            },
+            {
+                term: "Developmental Assistance",
+                expansion: null,
+                definition: "The specific support and training a Mentor provides to a Protégé under an MPA. The six authorized categories include technical assistance, business development, and general/administrative support.",
+                category: "Process",
+                relatedTerms: ["DAP", "CNA", "Mentor"],
+                modules: [7]
+            },
+            {
+                term: "Kickoff Meeting",
+                expansion: null,
+                definition: "The mandatory initial meeting held within 30 days of agreement approval. Kickoff meetings establish communication protocols, review milestones, and align expectations among all parties.",
+                category: "Process",
+                relatedTerms: ["Agreement", "30-Day Requirement", "Milestone"],
+                modules: [6]
+            },
+            {
+                term: "Post-Agreement Reporting",
+                expansion: null,
+                definition: "Required reporting for five years after a Mentor-Protégé Agreement ends. Post-agreement reports track the Protégé's continued development and success after formal assistance concludes.",
+                category: "Report",
+                relatedTerms: ["SAR", "Closeout", "Protégé"],
+                modules: [6]
+            },
+            {
+                term: "Risk Rating",
+                expansion: null,
+                definition: "A classification (LOW/MODERATE/HIGH) assigned by DCMA to Mentor-Protégé Agreements based on performance, compliance, and financial status. Risk ratings inform oversight intensity and corrective actions.",
+                category: "Process",
+                relatedTerms: ["DCMA", "SAR", "Compliance"],
+                modules: [6]
+            },
+            {
+                term: "Termination",
+                expansion: null,
+                definition: "The formal ending of a Mentor-Protégé Agreement before completion. Termination may be for convenience, cause, or mutual agreement and follows procedures in DFARS Appendix I.",
+                category: "Process",
+                relatedTerms: ["Closeout", "DFARS", "Agreement"],
+                modules: [3, 9]
+            },
+            {
+                term: "Two-Step Solicitation",
+                expansion: null,
+                definition: "The standard proposal process for Mentor-Protégé Agreements. Step one involves a white paper submission; step two is the full proposal for agreements that pass initial screening.",
+                category: "Process",
+                relatedTerms: ["White Paper", "Proposal", "Approval Process"],
+                modules: [4]
+            },
+            {
+                term: "White Paper",
+                expansion: null,
+                definition: "A preliminary proposal document submitted as the first step in the Mentor-Protégé Agreement approval process. White papers outline the proposed relationship, Protégé needs, and intended assistance.",
+                category: "Process",
+                relatedTerms: ["Two-Step Solicitation", "Proposal", "Approval"],
+                modules: [4]
+            },
+            // FINANCIAL TERMS
+            {
+                term: "Advance Agreement",
+                expansion: null,
+                definition: "A pre-approved arrangement establishing the treatment of specific costs under a contract (per FAR 31.109). Advance agreements help ensure developmental assistance costs will be allowable for reimbursement.",
+                category: "Financial",
+                relatedTerms: ["FAR", "Reimbursable", "Cost Accounting"],
+                modules: [5, 7]
+            },
+            {
+                term: "Budget Request",
+                expansion: null,
+                definition: "The formal submission requesting funding allocation for reimbursable Mentor-Protégé activities. Budget requests must align with approved spend plans and follow DoD fiscal procedures.",
+                category: "Financial",
+                relatedTerms: ["Spend Plan", "Funding", "Reimbursable"],
+                modules: [5]
+            },
+            {
+                term: "Progress Payments",
+                expansion: null,
+                definition: "Interim payments made to contractors based on costs incurred or percentage of work completed. FAR 32.504(c) governs progress payment compliance for MPP contracts.",
+                category: "Financial",
+                relatedTerms: ["FAR", "Payments", "Funding"],
+                modules: [5]
+            },
+            {
+                term: "Spend Plan",
+                expansion: null,
+                definition: "A detailed financial plan allocating funds across Mentor-Protégé Agreement activities and time periods. Spend plans require OSBP approval and guide monthly execution reporting.",
+                category: "Financial",
+                relatedTerms: ["Budget", "MER", "Funding"],
+                modules: [5]
+            },
+            // REGULATORY REFERENCES
+            {
+                term: "Appendix I",
+                expansion: "DFARS Appendix I",
+                definition: "The section of the Defense Federal Acquisition Regulation Supplement that establishes the policies and procedures for the DoD Mentor-Protégé Program. Contains sections I-102 through I-113.",
+                category: "Regulatory",
+                relatedTerms: ["DFARS", "Policy", "Regulatory"],
+                modules: [1, 3, 4, 5, 7, 8, 9]
+            },
+            {
+                term: "DFARS I-102",
+                expansion: null,
+                definition: "The DFARS Appendix I section defining Mentor eligibility requirements. Specifies the criteria prime contractors must meet to participate as Mentors in the program.",
+                category: "Regulatory",
+                relatedTerms: ["Mentor", "Eligibility", "DFARS"],
+                modules: [1, 4]
+            },
+            {
+                term: "DFARS I-104",
+                expansion: null,
+                definition: "The DFARS Appendix I section defining Protégé eligibility requirements. Specifies the eight categories of small businesses eligible to participate as Protégés.",
+                category: "Regulatory",
+                relatedTerms: ["Protégé", "Eligibility", "Small Business"],
+                modules: [1, 4]
+            },
+            {
+                term: "DFARS I-107",
+                expansion: null,
+                definition: "The DFARS Appendix I section specifying required content and structure for Mentor-Protégé Agreements. Defines mandatory elements including the developmental assistance approach.",
+                category: "Regulatory",
+                relatedTerms: ["MPA", "DAP", "Agreement"],
+                modules: [4, 7]
+            },
+            {
+                term: "DFARS I-109",
+                expansion: null,
+                definition: "The DFARS Appendix I section governing credit and reimbursement provisions. Defines credit multipliers: 4x for HUBZone/8(a), 3x for SDVOSB, and 2x for other small businesses.",
+                category: "Regulatory",
+                relatedTerms: ["Credit Multiplier", "Credit Agreement", "Reimbursable"],
+                modules: [8]
+            },
+            {
+                term: "DFARS I-113",
+                expansion: null,
+                definition: "The DFARS Appendix I section specifying annual reporting requirements for Protégés. Defines the information that must be submitted to track Protégé development outcomes.",
+                category: "Regulatory",
+                relatedTerms: ["Annual Review", "Reporting", "Protégé"],
+                modules: [5, 6]
+            },
+            {
+                term: "Nunn-Perry Award",
+                expansion: null,
+                definition: "An annual award recognizing outstanding Mentor-Protégé relationships that have delivered exceptional results. Named after Senators Sam Nunn and William Perry who championed the program.",
+                category: "Process",
+                relatedTerms: ["Mentor", "Protégé", "Recognition"],
+                modules: [2]
+            },
+            // FORMS
+            {
+                term: "DD 448",
+                expansion: "Military Interdepartmental Purchase Request",
+                definition: "The standard form used for transferring funds between military departments and defense agencies. DD 448 facilitates interagency funding for reimbursable Mentor-Protégé activities.",
+                category: "Form",
+                relatedTerms: ["MIPR", "DD 448-2", "Funding"],
+                modules: [5]
+            },
+            {
+                term: "DD 448-2",
+                expansion: "Acceptance of MIPR",
+                definition: "The form used to accept a Military Interdepartmental Purchase Request. DD 448-2 confirms the receiving organization's acceptance of funding and terms.",
+                category: "Form",
+                relatedTerms: ["DD 448", "MIPR", "Acceptance"],
+                modules: [5]
+            },
+            // ADDITIONAL KEY TERMS
+            {
+                term: "8(a) Program",
+                expansion: "SBA 8(a) Business Development Program",
+                definition: "An SBA program for small disadvantaged businesses that provides business development assistance and access to sole-source contracts. 8(a) firms receive a 4x credit multiplier in the MPP.",
+                category: "Acronym",
+                relatedTerms: ["SBA", "HUBZone", "Credit Multiplier"],
+                modules: [1, 8]
+            },
+            {
+                term: "BFM",
+                expansion: "Business and Financial Management",
+                definition: "The function responsible for financial oversight and management of Mentor-Protégé Program funds. BFM tracks budgets, spend plans, and financial compliance.",
+                category: "Role",
+                relatedTerms: ["Financial Management", "Budget", "Compliance"],
+                modules: [2, 5]
+            },
+            {
+                term: "CDRL",
+                expansion: "Contract Data Requirements List",
+                definition: "A list specifying data items required to be delivered under a contract. CDRLs in MPP agreements define required reports, documentation, and deliverables.",
+                category: "Acronym",
+                relatedTerms: ["Reporting", "Contract", "Deliverables"],
+                modules: [8]
+            },
+            {
+                term: "Component",
+                expansion: null,
+                definition: "A Military Department (Army, Navy, Air Force) or Defense Agency participating in the Mentor-Protégé Program. Components have Program Managers responsible for MPP oversight.",
+                category: "Role",
+                relatedTerms: ["Military Department", "PM", "Defense Agency"],
+                modules: [2]
+            },
+            {
+                term: "Non-Duplication Rule",
+                expansion: null,
+                definition: "The requirement that developmental assistance provided under an MPA cannot duplicate assistance already available to the Protégé through other sources. Ensures efficient use of program resources.",
+                category: "Process",
+                relatedTerms: ["Developmental Assistance", "Compliance", "Efficiency"],
+                modules: [7]
+            },
+            {
+                term: "Period of Performance",
+                expansion: null,
+                definition: "The time period during which a Mentor-Protégé Agreement is active. Extensions to the period of performance require formal modification and approval.",
+                category: "Process",
+                relatedTerms: ["Contract Modification", "Agreement", "Timeline"],
+                modules: [9]
+            },
+            {
+                term: "Prime Contractor",
+                expansion: null,
+                definition: "A company that contracts directly with the government to provide goods or services. In the MPP, prime contractors serve as Mentors providing developmental assistance to Protégé subcontractors.",
+                category: "Role",
+                relatedTerms: ["Mentor", "Subcontractor", "Contract"],
+                modules: [1, 8]
+            },
+            {
+                term: "Realistic Opportunity",
+                expansion: null,
+                definition: "The requirement that Protégés must have a genuine chance to obtain subcontracting work from their Mentor. Ensures MPAs lead to actual business opportunities.",
+                category: "Process",
+                relatedTerms: ["Subcontracting", "Protégé", "Opportunity"],
+                modules: [7]
+            },
+            {
+                term: "Six Categories",
+                expansion: "Six Categories of Authorized Assistance",
+                definition: "The types of developmental assistance Mentors may provide: technical assistance, management assistance, financial assistance, contracting assistance, business development, and general/administrative.",
+                category: "Process",
+                relatedTerms: ["Developmental Assistance", "DAP", "Mentor"],
+                modules: [7]
+            },
+            {
+                term: "Small Business",
+                expansion: null,
+                definition: "A business concern that meets the size standards defined by SBA for its industry. Small businesses are eligible to participate as Protégés in the Mentor-Protégé Program.",
+                category: "Role",
+                relatedTerms: ["Protégé", "SBA", "Size Standard"],
+                modules: [1, 8]
+            },
+            {
+                term: "Subcontracting",
+                expansion: null,
+                definition: "The practice of a prime contractor engaging smaller firms to perform portions of contract work. MPP Mentors commit to providing subcontracting opportunities to their Protégés.",
+                category: "Process",
+                relatedTerms: ["Prime Contractor", "Protégé", "Opportunity"],
+                modules: [8]
+            },
+            {
+                term: "WOSB",
+                expansion: "Women-Owned Small Business",
+                definition: "A small business that is at least 51% owned and controlled by one or more women. WOSBs are eligible to participate as Protégés in the Mentor-Protégé Program.",
+                category: "Acronym",
+                relatedTerms: ["Small Business", "Protégé", "Eligibility"],
+                modules: [1, 8]
+            },
+            // ============ EXPANDED TERMS (70+ NEW) ============
+            // ADDITIONAL DFARS APPENDIX I SECTIONS
+            {
+                term: "DFARS I-100",
+                expansion: "Scope of Appendix I",
+                definition: "The opening section of DFARS Appendix I that establishes the scope and applicability of the DoD Mentor-Protégé Program regulations. Defines which DoD components and contractors are covered.",
+                category: "Regulatory",
+                relatedTerms: ["DFARS", "Appendix I", "DFARS I-101"],
+                modules: [1]
+            },
+            {
+                term: "DFARS I-101",
+                expansion: "Purpose of the Program",
+                definition: "The DFARS Appendix I section stating the purpose of the Mentor-Protégé Program: to develop the technical and business capabilities of small disadvantaged businesses through developmental assistance from major DoD contractors.",
+                category: "Regulatory",
+                relatedTerms: ["DFARS", "MPP", "DFARS I-100"],
+                modules: [1]
+            },
+            {
+                term: "DFARS I-103",
+                expansion: "Mentor Eligibility Criteria",
+                definition: "Detailed DFARS section specifying additional Mentor eligibility criteria including past performance requirements, active DoD contracts, and demonstrated commitment to small business development.",
+                category: "Regulatory",
+                relatedTerms: ["DFARS I-102", "Mentor", "Eligibility"],
+                modules: [1, 4]
+            },
+            {
+                term: "DFARS I-105",
+                expansion: "Protégé Size Eligibility",
+                definition: "The DFARS section establishing size standards and eligibility thresholds for Protégé firms. Protégés must qualify as small businesses under applicable SBA size standards.",
+                category: "Regulatory",
+                relatedTerms: ["DFARS I-104", "Protégé", "Size Standard"],
+                modules: [1, 4]
+            },
+            {
+                term: "DFARS I-106",
+                expansion: "Agreement Duration Limits",
+                definition: "The DFARS section specifying maximum duration limits for Mentor-Protégé Agreements. Generally limits agreements to three years with possible extensions based on demonstrated progress.",
+                category: "Regulatory",
+                relatedTerms: ["MPA", "Period of Performance", "Extension"],
+                modules: [3, 4]
+            },
+            {
+                term: "DFARS I-108",
+                expansion: "Costs and Obligations",
+                definition: "The DFARS section governing allowable costs, cost sharing requirements, and financial obligations under Mentor-Protégé Agreements. Addresses both credit and reimbursable arrangements.",
+                category: "Regulatory",
+                relatedTerms: ["Reimbursable Agreement", "Credit Agreement", "Financial"],
+                modules: [3, 5]
+            },
+            {
+                term: "DFARS I-110",
+                expansion: "Credit Calculation Methods",
+                definition: "The DFARS section detailing how subcontracting credits are calculated under the Mentor-Protégé Program. Specifies valuation methods for developmental assistance provided to Protégés.",
+                category: "Regulatory",
+                relatedTerms: ["Credit Multiplier", "Credit Agreement", "DFARS I-109"],
+                modules: [8]
+            },
+            {
+                term: "DFARS I-111",
+                expansion: "Fraud and Abuse Provisions",
+                definition: "The DFARS section addressing fraud prevention, misrepresentation penalties, and abuse of the Mentor-Protégé Program. Establishes consequences for program violations.",
+                category: "Regulatory",
+                relatedTerms: ["Compliance", "Termination", "Oversight"],
+                modules: [6, 9]
+            },
+            {
+                term: "DFARS I-112",
+                expansion: "Reporting Requirements",
+                definition: "The DFARS section establishing comprehensive reporting requirements for Mentors and Protégés. Covers frequency, content, and submission procedures for all required reports.",
+                category: "Regulatory",
+                relatedTerms: ["SAR", "MER", "Reporting"],
+                modules: [5, 6]
+            },
+            {
+                term: "DFARS I-114",
+                expansion: "Non-Reimbursable Costs",
+                definition: "The DFARS section listing categories of costs that are NOT eligible for government reimbursement under the Mentor-Protégé Program. Includes entertainment, contributions, and certain indirect costs.",
+                category: "Regulatory",
+                relatedTerms: ["Reimbursable Agreement", "Allowable Costs", "Financial"],
+                modules: [5]
+            },
+            // ADDITIONAL ROLES
+            {
+                term: "ACO",
+                expansion: "Administrative Contracting Officer",
+                definition: "A Contracting Officer responsible for administering contracts after award. The ACO handles day-to-day contract administration, modifications, and compliance monitoring for MPP agreements.",
+                category: "Role",
+                relatedTerms: ["KO", "PCO", "Contract Administration"],
+                modules: [2, 9]
+            },
+            {
+                term: "PCO",
+                expansion: "Procuring Contracting Officer",
+                definition: "A Contracting Officer responsible for contract award actions. The PCO handles solicitations, evaluations, and initial contract awards for Mentor-Protégé arrangements.",
+                category: "Role",
+                relatedTerms: ["KO", "ACO", "Contract Award"],
+                modules: [2, 9]
+            },
+            {
+                term: "SADBU",
+                expansion: "Small and Disadvantaged Business Utilization",
+                definition: "The office within each DoD Component responsible for promoting small business participation. SADBU offices support MPP implementation at the Component level.",
+                category: "Role",
+                relatedTerms: ["OSDBU", "OSBP", "Small Business"],
+                modules: [2]
+            },
+            {
+                term: "OSDBU",
+                expansion: "Office of Small and Disadvantaged Business Utilization",
+                definition: "A federal agency office responsible for small business advocacy and assistance. OSDBUs help small businesses navigate federal contracting opportunities.",
+                category: "Role",
+                relatedTerms: ["SADBU", "OSBP", "Small Business"],
+                modules: [2]
+            },
+            {
+                term: "USD(A&S)",
+                expansion: "Under Secretary of Defense for Acquisition and Sustainment",
+                definition: "The senior DoD official responsible for all acquisition and sustainment matters. USD(A&S) provides policy oversight for the Mentor-Protégé Program through OSBP.",
+                category: "Role",
+                relatedTerms: ["OSBP", "DoD", "Policy"],
+                modules: [1, 2]
+            },
+            // FINANCIAL TERMS
+            {
+                term: "Allowable Costs",
+                expansion: null,
+                definition: "Costs that are permitted for reimbursement under government contracts per FAR Part 31. Only allowable costs can be claimed for reimbursement in MPP agreements.",
+                category: "Financial",
+                relatedTerms: ["FAR", "Reimbursable Agreement", "DFARS I-114"],
+                modules: [5]
+            },
+            {
+                term: "Base Year",
+                expansion: null,
+                definition: "The initial period of performance for a contract before any option years are exercised. The base year establishes the foundation for Mentor-Protégé Agreement activities.",
+                category: "Financial",
+                relatedTerms: ["Option Year", "Period of Performance", "Contract"],
+                modules: [9]
+            },
+            {
+                term: "Ceiling Price",
+                expansion: null,
+                definition: "The maximum amount the government will pay under a contract. Ceiling prices in reimbursable MPP agreements cap total developmental assistance costs.",
+                category: "Financial",
+                relatedTerms: ["Budget", "Funding", "Reimbursable Agreement"],
+                modules: [3, 5]
+            },
+            {
+                term: "CLIN",
+                expansion: "Contract Line Item Number",
+                definition: "A unique identifier for each item or service in a contract. CLINs in MPP agreements separately identify developmental assistance activities for tracking and payment.",
+                category: "Financial",
+                relatedTerms: ["Contract", "Funding", "Tracking"],
+                modules: [5, 9]
+            },
+            {
+                term: "Cost-Plus Contract",
+                expansion: null,
+                definition: "A contract type where the government reimburses allowable costs plus a fee or profit. Some reimbursable MPP arrangements use cost-plus structures.",
+                category: "Financial",
+                relatedTerms: ["Fixed-Price Contract", "Reimbursable Agreement", "Fee"],
+                modules: [5]
+            },
+            {
+                term: "Direct Costs",
+                expansion: null,
+                definition: "Costs that can be specifically identified with a particular project or activity. Direct costs in MPP include labor, materials, and travel directly supporting developmental assistance.",
+                category: "Financial",
+                relatedTerms: ["Indirect Costs", "G&A", "Cost Accounting"],
+                modules: [5, 7]
+            },
+            {
+                term: "Disbursement",
+                expansion: null,
+                definition: "The actual payment of funds from the government to the contractor. Disbursements in reimbursable MPP agreements follow submission and approval of invoices.",
+                category: "Financial",
+                relatedTerms: ["Obligation", "Payment", "MER"],
+                modules: [5]
+            },
+            {
+                term: "Fee",
+                expansion: null,
+                definition: "The profit or compensation paid to a contractor above allowable costs. Fee structures vary based on contract type and are subject to statutory limits.",
+                category: "Financial",
+                relatedTerms: ["Cost-Plus Contract", "Profit", "Financial"],
+                modules: [5]
+            },
+            {
+                term: "Fixed-Price Contract",
+                expansion: null,
+                definition: "A contract type where the contractor receives a predetermined price regardless of actual costs incurred. Less common in MPP but may apply to specific deliverables.",
+                category: "Financial",
+                relatedTerms: ["Cost-Plus Contract", "Contract", "Pricing"],
+                modules: [5]
+            },
+            {
+                term: "G&A",
+                expansion: "General and Administrative Costs",
+                definition: "Indirect costs incurred for overall business operations that cannot be directly attributed to specific contracts. G&A rates are applied to direct costs in MPP cost calculations.",
+                category: "Financial",
+                relatedTerms: ["Indirect Costs", "Direct Costs", "Cost Accounting"],
+                modules: [5]
+            },
+            {
+                term: "Indirect Costs",
+                expansion: null,
+                definition: "Costs that benefit multiple projects and cannot be directly attributed to a specific activity. Includes overhead, fringe benefits, and G&A in MPP cost structures.",
+                category: "Financial",
+                relatedTerms: ["Direct Costs", "G&A", "Overhead"],
+                modules: [5]
+            },
+            {
+                term: "Invoice",
+                expansion: null,
+                definition: "A formal request for payment submitted by the Mentor to the government for reimbursable MPP costs. Invoices must be supported by MERs and approved documentation.",
+                category: "Financial",
+                relatedTerms: ["MER", "Disbursement", "Payment"],
+                modules: [5]
+            },
+            {
+                term: "Labor Rate",
+                expansion: null,
+                definition: "The hourly or annual cost for personnel working on MPP activities. Labor rates include salary, fringe benefits, and applicable indirect cost burdens.",
+                category: "Financial",
+                relatedTerms: ["Direct Costs", "Personnel", "Cost Accounting"],
+                modules: [5]
+            },
+            {
+                term: "Obligation",
+                expansion: null,
+                definition: "A legal commitment by the government to pay for goods or services. Obligations in reimbursable MPP agreements reserve funds for anticipated expenditures.",
+                category: "Financial",
+                relatedTerms: ["Disbursement", "Funding", "Budget"],
+                modules: [5]
+            },
+            {
+                term: "ODC",
+                expansion: "Other Direct Costs",
+                definition: "Direct costs other than labor, such as materials, equipment, travel, and subcontracts. ODCs in MPP support developmental assistance activities.",
+                category: "Financial",
+                relatedTerms: ["Direct Costs", "Travel", "Materials"],
+                modules: [5]
+            },
+            {
+                term: "Option Year",
+                expansion: null,
+                definition: "An additional contract period that the government may exercise at its discretion. Option years in MPP agreements allow for continuation of developmental assistance.",
+                category: "Financial",
+                relatedTerms: ["Base Year", "Period of Performance", "Extension"],
+                modules: [9]
+            },
+            {
+                term: "Overhead",
+                expansion: null,
+                definition: "Indirect costs associated with operating a business that are allocated across all work performed. Overhead rates are applied to direct labor in MPP cost calculations.",
+                category: "Financial",
+                relatedTerms: ["Indirect Costs", "G&A", "Cost Accounting"],
+                modules: [5]
+            },
+            // PROCESS TERMS
+            {
+                term: "Amendment",
+                expansion: null,
+                definition: "A formal change to a Mentor-Protégé Agreement that modifies terms, scope, or conditions. Amendments require review and approval through established channels.",
+                category: "Process",
+                relatedTerms: ["Contract Modification", "MPA", "Approval"],
+                modules: [9]
+            },
+            {
+                term: "Assignment",
+                expansion: null,
+                definition: "The transfer of contract rights or obligations from one party to another. Assignment of MPP agreements requires government approval and may occur during corporate changes.",
+                category: "Process",
+                relatedTerms: ["Novation", "Contract", "Transfer"],
+                modules: [9]
+            },
+            {
+                term: "Extension",
+                expansion: null,
+                definition: "An approved increase in the period of performance for a Mentor-Protégé Agreement. Extensions allow continuation of developmental assistance beyond the original timeframe.",
+                category: "Process",
+                relatedTerms: ["Period of Performance", "Option Year", "Modification"],
+                modules: [9]
+            },
+            {
+                term: "Letter of Intent",
+                expansion: null,
+                definition: "A preliminary document expressing interest in forming a Mentor-Protégé relationship. Letters of intent precede formal proposal submission and demonstrate mutual commitment.",
+                category: "Process",
+                relatedTerms: ["White Paper", "Proposal", "MPA"],
+                modules: [4]
+            },
+            {
+                term: "Milestone",
+                expansion: null,
+                definition: "A significant achievement point in a Mentor-Protégé Agreement that indicates progress toward capability development goals. Milestones are tracked in QARs and SARs.",
+                category: "Process",
+                relatedTerms: ["DAP", "Performance", "QAR"],
+                modules: [4, 6, 7]
+            },
+            {
+                term: "Novation",
+                expansion: null,
+                definition: "The legal transfer of all contract rights and obligations from one party to another, typically due to merger, acquisition, or reorganization. Novation requires government approval.",
+                category: "Process",
+                relatedTerms: ["Assignment", "Transfer", "Contract"],
+                modules: [9]
+            },
+            {
+                term: "OCI",
+                expansion: "Organizational Conflict of Interest",
+                definition: "A situation where a contractor's interests may impair its objectivity or create unfair competitive advantage. OCI considerations apply to Mentor-Protégé relationships.",
+                category: "Process",
+                relatedTerms: ["Compliance", "Ethics", "Conflict"],
+                modules: [4]
+            },
+            {
+                term: "Proposal",
+                expansion: null,
+                definition: "The formal submission requesting approval of a Mentor-Protégé Agreement. Proposals include the CNA, DAP, cost estimates, and supporting documentation.",
+                category: "Process",
+                relatedTerms: ["White Paper", "Approval Process", "CNA"],
+                modules: [4]
+            },
+            {
+                term: "PWS",
+                expansion: "Performance Work Statement",
+                definition: "A document describing required outcomes and performance standards rather than specific tasks. PWS format may be used for developmental assistance deliverables in MPP.",
+                category: "Process",
+                relatedTerms: ["SOW", "Contract", "Requirements"],
+                modules: [4, 7]
+            },
+            {
+                term: "SOW",
+                expansion: "Statement of Work",
+                definition: "A document describing the specific tasks, deliverables, and requirements for a contract. SOWs in MPP agreements detail developmental assistance activities.",
+                category: "Process",
+                relatedTerms: ["PWS", "Contract", "DAP"],
+                modules: [4, 7]
+            },
+            {
+                term: "Teaming Agreement",
+                expansion: null,
+                definition: "A formal arrangement between companies to pursue and perform contracts together. Mentor-Protégé relationships may evolve into teaming agreements for specific opportunities.",
+                category: "Process",
+                relatedTerms: ["Joint Venture", "Partnership", "Subcontracting"],
+                modules: [8]
+            },
+            // REPORTING/SYSTEMS
+            {
+                term: "CAGE Code",
+                expansion: "Commercial and Government Entity Code",
+                definition: "A five-character identifier assigned to entities doing business with the federal government. CAGE codes are required for all Mentors and Protégés in SAM registration.",
+                category: "Acronym",
+                relatedTerms: ["SAM", "UEI", "Registration"],
+                modules: [4]
+            },
+            {
+                term: "CPARS",
+                expansion: "Contractor Performance Assessment Reporting System",
+                definition: "The government-wide system for recording and retrieving contractor performance evaluations. CPARS assessments may reference Mentor-Protégé Program participation and outcomes.",
+                category: "Acronym",
+                relatedTerms: ["Performance", "Evaluation", "Reporting"],
+                modules: [6]
+            },
+            {
+                term: "eSRS",
+                expansion: "Electronic Subcontracting Reporting System",
+                definition: "The federal system for submitting subcontracting reports electronically. eSRS captures subcontracting achievements including MPP credit agreements.",
+                category: "Acronym",
+                relatedTerms: ["SF 294", "SF 295", "Subcontracting"],
+                modules: [8]
+            },
+            {
+                term: "FPDS",
+                expansion: "Federal Procurement Data System",
+                definition: "The central repository of federal contracting data. FPDS tracks contract awards and may reflect Mentor-Protégé relationships in contracting records.",
+                category: "Acronym",
+                relatedTerms: ["Contract", "Data", "Reporting"],
+                modules: [8]
+            },
+            {
+                term: "SAM",
+                expansion: "System for Award Management",
+                definition: "The official government system for entity registration and contracting information. All Mentors and Protégés must maintain active SAM registration.",
+                category: "Acronym",
+                relatedTerms: ["CAGE Code", "UEI", "Registration"],
+                modules: [4]
+            },
+            // J, U, V TERMS
+            {
+                term: "Joint Venture",
+                expansion: null,
+                definition: "A business arrangement where two or more parties agree to combine resources for a specific project while maintaining separate identities. Mentor-Protégé pairs may form joint ventures for contract opportunities.",
+                category: "Process",
+                relatedTerms: ["Teaming Agreement", "Partnership", "Protégé"],
+                modules: [8]
+            },
+            {
+                term: "JV Agreement",
+                expansion: "Joint Venture Agreement",
+                definition: "The formal legal document establishing a joint venture between parties. JV agreements between Mentors and Protégés must comply with SBA regulations for small business status.",
+                category: "Agreement",
+                relatedTerms: ["Joint Venture", "SBA", "Partnership"],
+                modules: [8]
+            },
+            {
+                term: "UEI",
+                expansion: "Unique Entity Identifier",
+                definition: "A 12-character alphanumeric ID assigned to entities registered in SAM.gov, replacing the DUNS number. All Mentors and Protégés must have a valid UEI for program participation.",
+                category: "Acronym",
+                relatedTerms: ["SAM", "CAGE Code", "Registration"],
+                modules: [4]
+            },
+            {
+                term: "Undefinitized Contract Action",
+                expansion: null,
+                definition: "A contract action where terms, specifications, or price have not been finalized. May apply to urgent MPP modifications requiring retroactive definitization.",
+                category: "Process",
+                relatedTerms: ["Contract Modification", "Definitization", "Pricing"],
+                modules: [9]
+            },
+            {
+                term: "VOSB",
+                expansion: "Veteran-Owned Small Business",
+                definition: "A small business that is at least 51% owned and controlled by one or more veterans. VOSBs are eligible as Protégés and receive credit multiplier benefits.",
+                category: "Acronym",
+                relatedTerms: ["SDVOSB", "Small Business", "Veteran"],
+                modules: [1, 8]
+            },
+            {
+                term: "Value Engineering",
+                expansion: null,
+                definition: "A systematic method to improve the value of products or services by examining function. Value engineering proposals from Protégés may demonstrate capability development.",
+                category: "Process",
+                relatedTerms: ["Technical Assistance", "Cost Savings", "Innovation"],
+                modules: [7]
+            },
+            // SMALL BUSINESS CATEGORIES
+            {
+                term: "ANC",
+                expansion: "Alaska Native Corporation",
+                definition: "A corporation organized under Alaska Native Claims Settlement Act that qualifies for special small business consideration. ANCs may participate as Protégés in the MPP.",
+                category: "Acronym",
+                relatedTerms: ["Small Business", "Protégé", "8(a) Program"],
+                modules: [1, 8]
+            },
+            {
+                term: "EDWOSB",
+                expansion: "Economically Disadvantaged Women-Owned Small Business",
+                definition: "A women-owned small business that meets additional economic disadvantage criteria. EDWOSBs are eligible for certain set-aside contracts and MPP participation.",
+                category: "Acronym",
+                relatedTerms: ["WOSB", "Small Business", "Protégé"],
+                modules: [1, 8]
+            },
+            {
+                term: "Indian Tribe",
+                expansion: null,
+                definition: "A federally recognized Native American tribal entity. Tribally-owned businesses may qualify as small disadvantaged businesses for MPP Protégé eligibility.",
+                category: "Role",
+                relatedTerms: ["ANC", "NHO", "Small Business"],
+                modules: [1, 8]
+            },
+            {
+                term: "NHO",
+                expansion: "Native Hawaiian Organization",
+                definition: "An organization serving and representing Native Hawaiians that may qualify for special small business consideration. NHOs may participate in the MPP as Protégés.",
+                category: "Acronym",
+                relatedTerms: ["ANC", "Small Business", "Protégé"],
+                modules: [1, 8]
+            },
+            {
+                term: "Size Standard",
+                expansion: null,
+                definition: "The criteria used by SBA to determine if a business qualifies as small for federal contracting purposes. Size standards vary by industry and are based on revenue or employees.",
+                category: "Process",
+                relatedTerms: ["SBA", "Small Business", "DFARS I-105"],
+                modules: [1, 4]
+            },
+            // LEGISLATIVE/HISTORICAL
+            {
+                term: "10 U.S.C. 4902",
+                expansion: "United States Code Title 10 Section 4902",
+                definition: "The current statutory authority for the DoD Mentor-Protégé Program. This section of federal law establishes the legal basis and requirements for the program.",
+                category: "Regulatory",
+                relatedTerms: ["NDAA", "Public Law", "Legislative"],
+                modules: [1]
+            },
+            {
+                term: "NDAA",
+                expansion: "National Defense Authorization Act",
+                definition: "The annual legislation authorizing DoD programs and policies. NDAA provisions have modified and extended the Mentor-Protégé Program since its creation.",
+                category: "Regulatory",
+                relatedTerms: ["10 U.S.C. 4902", "Legislative", "Policy"],
+                modules: [1]
+            },
+            {
+                term: "Public Law 101-510",
+                expansion: null,
+                definition: "The 1991 legislation that created the DoD Mentor-Protégé Program. This public law established the original framework for Mentor assistance to small disadvantaged businesses.",
+                category: "Regulatory",
+                relatedTerms: ["NDAA", "10 U.S.C. 4902", "Legislative"],
+                modules: [1]
+            },
+            // ADDITIONAL USEFUL TERMS
+            {
+                term: "Capability Development",
+                expansion: null,
+                definition: "The process of enhancing a Protégé's technical, managerial, or business competencies through Mentor assistance. Capability development is the core objective of every MPA.",
+                category: "Process",
+                relatedTerms: ["Developmental Assistance", "Protégé", "DAP"],
+                modules: [1, 7]
+            },
+            {
+                term: "Compliance",
+                expansion: null,
+                definition: "Adherence to MPP regulations, policies, and agreement requirements. Compliance is monitored through QARs, SARs, and DCMA oversight.",
+                category: "Process",
+                relatedTerms: ["DCMA", "Risk Rating", "Reporting"],
+                modules: [6]
+            },
+            {
+                term: "Eligibility",
+                expansion: null,
+                definition: "The qualification status required for program participation. Mentor eligibility is defined in DFARS I-102/I-103; Protégé eligibility in DFARS I-104/I-105.",
+                category: "Process",
+                relatedTerms: ["DFARS I-102", "DFARS I-104", "Certification"],
+                modules: [1, 4]
+            },
+            {
+                term: "Executive Summary",
+                expansion: null,
+                definition: "A concise overview document summarizing a Mentor-Protégé proposal or agreement. Executive summaries highlight key objectives, parties, and expected outcomes.",
+                category: "Process",
+                relatedTerms: ["Proposal", "MPA", "Documentation"],
+                modules: [4]
+            },
+            {
+                term: "Good Standing",
+                expansion: null,
+                definition: "The status of a Mentor or Protégé that is meeting all program requirements without compliance issues. Good standing is required for continued program participation.",
+                category: "Process",
+                relatedTerms: ["Compliance", "Risk Rating", "Eligibility"],
+                modules: [6]
+            },
+            {
+                term: "Historical Agreement",
+                expansion: null,
+                definition: "A completed or closed Mentor-Protégé Agreement from prior periods. Historical agreements provide precedents and lessons learned for current program administration.",
+                category: "Process",
+                relatedTerms: ["Closeout", "MPA", "Post-Agreement Reporting"],
+                modules: [6]
+            },
+            {
+                term: "Incentive",
+                expansion: null,
+                definition: "Benefits provided to encourage Mentor participation, including subcontracting credit, cost reimbursement, and positive past performance recognition.",
+                category: "Financial",
+                relatedTerms: ["Credit Agreement", "Reimbursable Agreement", "Credit Multiplier"],
+                modules: [1, 8]
+            },
+            {
+                term: "Key Personnel",
+                expansion: null,
+                definition: "Individuals identified as essential to successful execution of a Mentor-Protégé Agreement. Key personnel changes may require government notification or approval.",
+                category: "Process",
+                relatedTerms: ["MPA", "Personnel", "Modification"],
+                modules: [4]
+            },
+            {
+                term: "Lessons Learned",
+                expansion: null,
+                definition: "Knowledge gained from MPP experience that can improve future agreements. Documenting lessons learned is part of agreement closeout and continuous improvement.",
+                category: "Process",
+                relatedTerms: ["Closeout", "Best Practices", "Improvement"],
+                modules: [6]
+            },
+            {
+                term: "Management Assistance",
+                expansion: null,
+                definition: "One of the six categories of authorized developmental assistance. Management assistance helps Protégés improve business operations, planning, and organizational capabilities.",
+                category: "Process",
+                relatedTerms: ["Six Categories", "Developmental Assistance", "Business Development"],
+                modules: [7]
+            },
+            {
+                term: "Technical Assistance",
+                expansion: null,
+                definition: "One of the six categories of authorized developmental assistance. Technical assistance helps Protégés develop engineering, manufacturing, and technology capabilities.",
+                category: "Process",
+                relatedTerms: ["Six Categories", "Developmental Assistance", "Capability Development"],
+                modules: [7]
+            },
+            {
+                term: "Workshop",
+                expansion: null,
+                definition: "Training sessions or educational events provided as part of developmental assistance. Workshops help Protégé personnel develop specific skills and knowledge.",
+                category: "Process",
+                relatedTerms: ["Technical Assistance", "Training", "Developmental Assistance"],
+                modules: [7]
+            }
+        ];
+
+        // State management
+        let currentLetter = null;
+
+        // Group terms by first letter
+        function getTermsByLetter() {
+            const grouped = {};
+            glossaryData.forEach(term => {
+                const firstLetter = term.term[0].toUpperCase();
+                if (!grouped[firstLetter]) {
+                    grouped[firstLetter] = [];
+                }
+                grouped[firstLetter].push(term);
+            });
+            // Sort terms within each letter
+            Object.keys(grouped).forEach(letter => {
+                grouped[letter].sort((a, b) => a.term.localeCompare(b.term));
+            });
+            return grouped;
+        }
+
+        // Render letter grid
+        function renderLetterGrid() {
+            const grid = document.getElementById('letterGrid');
+            const termsByLetter = getTermsByLetter();
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+            // Filter out letters with 0 terms (hide empty letters)
+            grid.innerHTML = alphabet
+                .filter(letter => termsByLetter[letter] && termsByLetter[letter].length > 0)
+                .map(letter => {
+                    const count = termsByLetter[letter].length;
+                    return `
+                        <div class="letter-card" onclick="openTermsModal('${letter}')">
+                            <div class="letter">${letter}</div>
+                            <div class="term-count">${count} term${count !== 1 ? 's' : ''}</div>
+                        </div>
+                    `;
+                }).join('');
+        }
+
+        // Open terms modal
+        function openTermsModal(letter) {
+            currentLetter = letter;
+            const termsByLetter = getTermsByLetter();
+            const terms = termsByLetter[letter] || [];
+
+            document.getElementById('termsModalTitle').textContent = `Terms Starting with "${letter}"`;
+            document.getElementById('termsGrid').innerHTML = terms.map(term => `
+                <div class="term-card" onclick="openDefinitionModal('${term.term.replace(/'/g, "\\'")}')">
+                    ${term.term}
+                </div>
+            `).join('');
+
+            document.getElementById('termsModal').classList.add('active');
+        }
+
+        // Close terms modal
+        function closeTermsModal() {
+            document.getElementById('termsModal').classList.remove('active');
+            currentLetter = null;
+        }
+
+        // Open definition modal
+        function openDefinitionModal(termName) {
+            const term = glossaryData.find(t => t.term === termName);
+            if (!term) return;
+
+            const titleHtml = `
+                ${term.term}
+                <span class="category-badge ${term.category}">${term.category}</span>
+            `;
+            document.getElementById('definitionModalTitle').innerHTML = titleHtml;
+
+            let contentHtml = '<div class="definition-content">';
+
+            if (term.expansion) {
+                contentHtml += `<div class="definition-expansion">${term.expansion}</div>`;
+            }
+
+            contentHtml += `<div class="definition-text">${term.definition}</div>`;
+
+            if (term.relatedTerms && term.relatedTerms.length > 0) {
+                contentHtml += `
+                    <div class="definition-section">
+                        <div class="definition-section-title">Related Terms</div>
+                        <div class="related-terms">
+                            ${term.relatedTerms.map(rt => {
+                                const exists = glossaryData.some(t => t.term === rt);
+                                if (exists) {
+                                    return `<button class="related-term" onclick="navigateToTerm('${rt.replace(/'/g, "\\'")}')">${rt}</button>`;
+                                }
+                                return `<span class="related-term" style="cursor: default; opacity: 0.7;">${rt}</span>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (term.modules && term.modules.length > 0) {
+                contentHtml += `
+                    <div class="definition-section">
+                        <div class="definition-section-title">Referenced In</div>
+                        <div class="module-refs">
+                            ${term.modules.map(m => `<span class="module-ref">Module ${m}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (currentLetter) {
+                contentHtml += `
+                    <button class="back-btn" onclick="backToTerms()">
+                        <span>←</span> Back to ${currentLetter}
+                    </button>
+                `;
+            }
+
+            contentHtml += '</div>';
+
+            document.getElementById('definitionContent').innerHTML = contentHtml;
+            document.getElementById('definitionModal').classList.add('active');
+        }
+
+        // Navigate to a related term
+        function navigateToTerm(termName) {
+            const term = glossaryData.find(t => t.term === termName);
+            if (term) {
+                currentLetter = term.term[0].toUpperCase();
+                openDefinitionModal(termName);
+            }
+        }
+
+        // Back to terms list
+        function backToTerms() {
+            closeDefinitionModal();
+            if (currentLetter) {
+                openTermsModal(currentLetter);
+            }
+        }
+
+        // Close definition modal
+        function closeDefinitionModal() {
+            document.getElementById('definitionModal').classList.remove('active');
+        }
+
+        // Close modals on overlay click
+        document.getElementById('termsModal').addEventListener('click', function(e) {
+            if (e.target === this) closeTermsModal();
+        });
+
+        document.getElementById('definitionModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDefinitionModal();
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (document.getElementById('definitionModal').classList.contains('active')) {
+                    closeDefinitionModal();
+                } else if (document.getElementById('termsModal').classList.contains('active')) {
+                    closeTermsModal();
+                }
+            }
+        });
+
+        // Initialize
+        renderLetterGrid();
+    </script>
+</body>
+</html>

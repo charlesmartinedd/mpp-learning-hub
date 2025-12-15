@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoD Mentor-Protégé Program Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-900: #0f172a;
+            --navy-800: #1e293b;
+            --navy-700: #1e3a5f;
+            --navy-600: #2d4a6f;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --warm-50: #fefdfb;
+            --accent: #2563eb;
+            --accent-light: #3b82f6;
+            --accent-subtle: #dbeafe;
+            --green-500: #22c55e;
+            --red-500: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--warm-50) 0%, #f8fafc 50%, #f1f5f9 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: var(--navy-700);
+            color: white;
+            border: none;
+            padding: 0.625rem 1rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 1000;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: var(--navy-900);
+            transform: translateX(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #1e293b;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        /* Score Bar */
+        .score-bar {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 12px;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-display {
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .score-display span {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #4ade80;
+        }
+
+        .reset-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .reset-btn:hover {
+            background: #dc2626;
+        }
+
+        /* Module Grid */
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .module-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .module-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .module-card.completed {
+            background: linear-gradient(135deg, #166534 0%, #15803d 100%);
+        }
+
+        .module-card.in-progress {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+        }
+
+        .module-number {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+
+        .module-title {
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .module-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .question-count {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        .progress-indicator {
+            color: #4ade80;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Question Panel */
+        .question-panel {
+            display: none;
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-panel.active {
+            display: block;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .module-name {
+            color: #1e293b;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .close-btn {
+            background: #e2e8f0;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #64748b;
+            transition: background 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #cbd5e1;
+        }
+
+        .question-counter {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .question-text {
+            color: #1e293b;
+            font-size: 1.15rem;
+            font-weight: 500;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        /* Options */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .option {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .option:hover:not(.disabled) {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .option.selected {
+            border-color: #3b82f6;
+            background: #dbeafe;
+        }
+
+        .option.correct {
+            border-color: #22c55e;
+            background: #dcfce7;
+        }
+
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+        }
+
+        .option.disabled {
+            cursor: default;
+        }
+
+        .option-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #94a3b8;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option.selected .option-radio {
+            border-color: #3b82f6;
+            background: #3b82f6;
+        }
+
+        .option.correct .option-radio {
+            border-color: #22c55e;
+            background: #22c55e;
+        }
+
+        .option.incorrect .option-radio {
+            border-color: #ef4444;
+            background: #ef4444;
+        }
+
+        .option-radio::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            display: none;
+        }
+
+        .option.selected .option-radio::after,
+        .option.correct .option-radio::after,
+        .option.incorrect .option-radio::after {
+            display: block;
+        }
+
+        .option-text {
+            color: #334155;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* Feedback */
+        .feedback {
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #dcfce7;
+            border: 1px solid #22c55e;
+        }
+
+        .feedback.incorrect {
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feedback.correct .feedback-title {
+            color: #166534;
+        }
+
+        .feedback.incorrect .feedback-title {
+            color: #991b1b;
+        }
+
+        .feedback-text {
+            color: #475569;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .nav-btn.prev {
+            background: #e2e8f0;
+            border: none;
+            color: #475569;
+        }
+
+        .nav-btn.prev:hover:not(:disabled) {
+            background: #cbd5e1;
+        }
+
+        .nav-btn.next {
+            background: #3b82f6;
+            border: none;
+            color: white;
+        }
+
+        .nav-btn.next:hover:not(:disabled) {
+            background: #2563eb;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Results Panel */
+        .results-panel {
+            display: none;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-panel.active {
+            display: block;
+        }
+
+        .results-title {
+            color: #1e293b;
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .results-score {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .results-score.excellent {
+            color: #22c55e;
+        }
+
+        .results-score.good {
+            color: #3b82f6;
+        }
+
+        .results-score.needs-work {
+            color: #f59e0b;
+        }
+
+        .results-score.poor {
+            color: #ef4444;
+        }
+
+        .results-percentage {
+            color: #64748b;
+            font-size: 1.2rem;
+            margin-bottom: 32px;
+        }
+
+        .module-breakdown {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .breakdown-title {
+            color: #1e293b;
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .breakdown-row:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-module {
+            color: #475569;
+        }
+
+        .breakdown-score {
+            font-weight: 600;
+        }
+
+        .breakdown-score.perfect {
+            color: #22c55e;
+        }
+
+        .breakdown-score.partial {
+            color: #f59e0b;
+        }
+
+        .breakdown-score.zero {
+            color: #ef4444;
+        }
+
+        .missed-questions {
+            background: #fef2f2;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .missed-title {
+            color: #991b1b;
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+
+        .missed-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #fecaca;
+        }
+
+        .missed-item:last-child {
+            border-bottom: none;
+        }
+
+        .missed-question {
+            color: #7f1d1d;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .missed-answer {
+            color: #166534;
+            font-size: 0.9rem;
+        }
+
+        .results-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .results-btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .results-btn.retry {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .results-btn.retry:hover {
+            background: #2563eb;
+        }
+
+        .results-btn.review {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .results-btn.review:hover {
+            background: #cbd5e1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .module-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .question-panel {
+                padding: 20px;
+            }
+
+            .results-score {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .score-bar {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Hub
+    </a>
+    <div class="container">
+        <div class="header">
+            <h1>DoD Mentor-Protégé Program Quiz</h1>
+            <p>Select a module to begin testing your knowledge</p>
+        </div>
+
+        <div class="score-bar">
+            <div class="score-display">
+                Score: <span id="total-score">0</span> / <span id="total-questions">38</span>
+            </div>
+            <button class="reset-btn" onclick="resetQuiz()">Reset Quiz</button>
+        </div>
+
+        <div class="module-grid" id="module-grid">
+            <!-- Module cards will be generated here -->
+        </div>
+
+        <div class="question-panel" id="question-panel">
+            <div class="question-header">
+                <div class="module-name" id="current-module-name">Module 1: Program Overview</div>
+                <button class="close-btn" onclick="closeModule()">×</button>
+            </div>
+            <div class="question-counter" id="question-counter">Question 1 of 5</div>
+            <div class="question-text" id="question-text">Question text goes here</div>
+            <div class="options-container" id="options-container">
+                <!-- Options will be generated here -->
+            </div>
+            <div class="feedback" id="feedback">
+                <div class="feedback-title" id="feedback-title">✓ Correct!</div>
+                <div class="feedback-text" id="feedback-text">Explanation goes here</div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn prev" id="prev-btn" onclick="prevQuestion()">← Previous</button>
+                <button class="nav-btn next" id="next-btn" onclick="nextQuestion()">Next →</button>
+            </div>
+        </div>
+
+        <div class="results-panel" id="results-panel">
+            <h2 class="results-title">Quiz Complete!</h2>
+            <div class="results-score" id="final-score">35/38</div>
+            <div class="results-percentage" id="final-percentage">92% Correct</div>
+            <div class="module-breakdown" id="module-breakdown">
+                <div class="breakdown-title">Module Breakdown</div>
+                <!-- Breakdown rows will be generated here -->
+            </div>
+            <div class="missed-questions" id="missed-questions" style="display:none;">
+                <div class="missed-title">Questions to Review</div>
+                <!-- Missed questions will be generated here -->
+            </div>
+            <div class="results-buttons">
+                <button class="results-btn review" onclick="reviewMissed()">Review Missed</button>
+                <button class="results-btn retry" onclick="resetQuiz()">Try Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Data - Transformed from validation results
+        const quizData = {
+            modules: [
+                {
+                    id: 1,
+                    name: "Module 1: Program Overview",
+                    questions: [
+                        {
+                            id: 1,
+                            text: "What is the primary purpose of the DoD Mentor-Protégé Program (MPP)?",
+                            options: [
+                                "To provide financial grants to small businesses",
+                                "To enhance the capabilities of small businesses, enabling them to successfully compete for prime contract and subcontract awards",
+                                "To replace large contractors with small businesses",
+                                "To offer tax incentives to large corporations"
+                            ],
+                            correct: 1,
+                            explanation: "The primary purpose of the DoD MPP is to enhance the technical capabilities of small businesses, helping them compete for contract awards."
+                        },
+                        {
+                            id: 2,
+                            text: "Which of the following entities can serve as a Mentor in the DoD MPP?",
+                            options: [
+                                "Only DoD prime contractors",
+                                "Any large business interested in helping small businesses",
+                                "DoD prime contractors, other contractors with an active subcontracting plan, and DoD Grantees",
+                                "Only companies headquartered in the United States"
+                            ],
+                            correct: 2,
+                            explanation: "Note: The documentation indicates DoD prime contractors and contractors with active subcontracting plans are eligible. 'DoD Grantees' may not be a standard category - verify with current SOP."
+                        },
+                        {
+                            id: 3,
+                            text: "True or False: The DoD Mentor-Protégé Program allows a Protégé firm to have more than one Mentor at a time.",
+                            options: [
+                                "True",
+                                "False"
+                            ],
+                            correct: 1,
+                            explanation: "FALSE is correct. DFARS Appendix I explicitly states: 'A Protégé firm may have only one active DoD Mentor-Protégé agreement.' The stated answer in the original quiz was incorrect."
+                        },
+                        {
+                            id: 4,
+                            text: "Which of the following describes a key benefit of participating in the DoD MPP for Protégé firms?",
+                            options: [
+                                "Automatic awarding of government contracts",
+                                "Enhanced technical capabilities and improved ability to compete for contracts",
+                                "Exemption from all regulatory requirements",
+                                "Guaranteed revenue from Mentor companies"
+                            ],
+                            correct: 1,
+                            explanation: "Protégé firms benefit from enhanced technical capabilities through developmental assistance, improving their ability to compete for contracts."
+                        },
+                        {
+                            id: 5,
+                            text: "What is the maximum duration for a Mentor-Protégé Agreement under the DoD MPP?",
+                            options: [
+                                "1 year",
+                                "2 years",
+                                "3 years, with potential for extension",
+                                "5 years"
+                            ],
+                            correct: 2,
+                            explanation: "Mentor-Protégé Agreements can last up to 3 years, with the possibility of extension based on program requirements."
+                        }
+                    ]
+                },
+                {
+                    id: 2,
+                    name: "Module 2: Roles and Responsibilities",
+                    questions: [
+                        {
+                            id: 6,
+                            text: "Which office is responsible for the overall administration and management of the DoD Mentor-Protégé Program?",
+                            options: [
+                                "The Small Business Administration (SBA)",
+                                "The Office of Small Business Programs (OSBP)",
+                                "The Department of Defense Acquisition Office",
+                                "The General Services Administration (GSA)"
+                            ],
+                            correct: 1,
+                            explanation: "The DoD Office of Small Business Programs (OSBP) implements oversight authority and provides guidance for program execution. The Director provides management and oversight of the DoD MPP."
+                        },
+                        {
+                            id: 7,
+                            text: "What is the role of the Component MPP Manager in the DoD MPP?",
+                            options: [
+                                "To approve all Mentor-Protégé agreements for the entire DoD",
+                                "To serve as the primary point of contact within a military department or defense agency for the MPP",
+                                "To provide financial support directly to Protégé firms",
+                                "To evaluate and audit all Mentor firms annually"
+                            ],
+                            correct: 1,
+                            explanation: "Component MPP Managers serve as the primary point of contact within their respective military departments or defense agencies for MPP matters."
+                        },
+                        {
+                            id: 8,
+                            text: "True or False: Mentors are required to provide financial assistance to their Protégé firms.",
+                            options: [
+                                "True",
+                                "False"
+                            ],
+                            correct: 1,
+                            explanation: "FALSE is correct. DFARS Appendix I lists types of developmental assistance a Mentor MAY provide, including financial assistance, but it is not required. These are optional forms of support."
+                        },
+                        {
+                            id: 9,
+                            text: "What is one of the key responsibilities of a Protégé firm in a Mentor-Protégé Agreement?",
+                            options: [
+                                "To provide funding to the Mentor",
+                                "To submit annual progress reports and comply with the terms of the agreement",
+                                "To oversee the Mentor's subcontracting activities",
+                                "To ensure the Mentor meets small business goals"
+                            ],
+                            correct: 1,
+                            explanation: "Protégé firms must submit progress reports and comply with agreement terms to maintain compliance with the program."
+                        },
+                        {
+                            id: 10,
+                            text: "Which entity has the authority to approve or disapprove Mentor-Protégé Agreements?",
+                            options: [
+                                "The Mentor's contracting officer",
+                                "The Director, Office of Small Business Programs (OSBP)",
+                                "The Protégé firm",
+                                "The Small Business Administration"
+                            ],
+                            correct: 1,
+                            explanation: "The DoD OSBP Director has final concurrence or veto authority to fund approved MPAs. The Associate Director formally approves MPAs exceeding $750,000."
+                        },
+                        {
+                            id: 11,
+                            text: "What is the Mentor's responsibility for reporting in the MPP?",
+                            options: [
+                                "Report only when the Protégé achieves a milestone",
+                                "Submit semi-annual reports and a final closeout report",
+                                "No reporting is required by the Mentor",
+                                "Submit daily progress updates"
+                            ],
+                            correct: 1,
+                            explanation: "Under DFARS I-112.2(a), Mentors must submit semiannual reports for periods ending March 31st and September 30th, plus a final closeout report."
+                        }
+                    ]
+                },
+                {
+                    id: 3,
+                    name: "Module 3: Agreement Types, Processes, and Reporting",
+                    questions: [
+                        {
+                            id: 12,
+                            text: "What are the two primary types of Mentor-Protégé Agreements under the DoD MPP?",
+                            options: [
+                                "Financial and Non-Financial",
+                                "Credit and Reimbursable",
+                                "Short-term and Long-term",
+                                "Internal and External"
+                            ],
+                            correct: 1,
+                            explanation: "The two primary types are Credit and Reimbursable agreements. A third type, Hybrid, combines both elements."
+                        },
+                        {
+                            id: 13,
+                            text: "Under a credit agreement, what benefit does a Mentor receive for the developmental assistance provided to a Protégé?",
+                            options: [
+                                "Direct financial reimbursement from the DoD",
+                                "Credit toward small business subcontracting goals",
+                                "Tax exemption on profits",
+                                "Exclusive rights to the Protégé's intellectual property"
+                            ],
+                            correct: 1,
+                            explanation: "Credit agreements allow Mentors to receive credit toward subcontracting goals for unreimbursed developmental assistance costs."
+                        },
+                        {
+                            id: 14,
+                            text: "True or False: A reimbursable agreement allows a Mentor to receive direct reimbursement from the DoD for the costs incurred in providing developmental assistance to a Protégé.",
+                            options: [
+                                "True",
+                                "False"
+                            ],
+                            correct: 0,
+                            explanation: "TRUE. Reimbursable agreements provide monetary reimbursement for allowable developmental assistance costs incurred by the Mentor."
+                        },
+                        {
+                            id: 15,
+                            text: "Which of the following is a required component of a Mentor-Protégé Agreement proposal?",
+                            options: [
+                                "A list of all Mentor's subcontractors",
+                                "A developmental program outlining the assistance to be provided",
+                                "A guarantee of future government contracts for the Protégé",
+                                "A signed agreement from the SBA"
+                            ],
+                            correct: 1,
+                            explanation: "A developmental program outlining the assistance to be provided is a required component of every MPA proposal."
+                        }
+                    ]
+                },
+                {
+                    id: 4,
+                    name: "Module 4: Application and Approval Process",
+                    questions: [
+                        {
+                            id: 16,
+                            text: "What is the first step in the Mentor-Protégé Agreement application process?",
+                            options: [
+                                "Submit a formal proposal to the DoD OSBP",
+                                "Complete an online application through SAM.gov",
+                                "Contact the Component MPP Manager and submit an introductory white paper",
+                                "Attend a mandatory orientation session"
+                            ],
+                            correct: 2,
+                            explanation: "Note: The MPP SOP indicates applicants must submit through the MPP Portal (https://mpp.acq.osd.mil/). The 'white paper' approach may be outdated - verify with current procedures."
+                        },
+                        {
+                            id: 17,
+                            text: "True or False: Once a Mentor-Protégé Agreement is submitted, the DoD OSBP has 30 calendar days to approve or disapprove the agreement.",
+                            options: [
+                                "True",
+                                "False"
+                            ],
+                            correct: 1,
+                            explanation: "FALSE. The documentation does not specify a 30-day timeline. Module 4 advises Program Managers to 'set realistic expectations about timelines' and build in time for reviews."
+                        }
+                    ]
+                },
+                {
+                    id: 5,
+                    name: "Module 5: Financial Management and Reporting",
+                    questions: [
+                        {
+                            id: 18,
+                            text: "What is the purpose of a Budget and Spend Plan (BSP) in the DoD MPP?",
+                            options: [
+                                "To track the Protégé's revenue growth",
+                                "To outline the estimated costs and milestones for the developmental assistance to be provided",
+                                "To ensure the Mentor is financially stable",
+                                "To determine tax benefits for the Mentor"
+                            ],
+                            correct: 1,
+                            explanation: "The BSP outlines funding requirements for proposed agreements, including anticipated start dates and projected costs for developmental assistance."
+                        },
+                        {
+                            id: 19,
+                            text: "How often must Mentors submit progress reports under a Mentor-Protégé Agreement?",
+                            options: [
+                                "Monthly",
+                                "Quarterly",
+                                "Semi-annually",
+                                "Annually"
+                            ],
+                            correct: 2,
+                            explanation: "Mentors must submit semiannual progress reports for periods ending March 31st and September 30th each fiscal year."
+                        },
+                        {
+                            id: 20,
+                            text: "True or False: The Mentor is required to maintain detailed records of all developmental assistance costs and submit them as part of their financial reporting obligations.",
+                            options: [
+                                "True",
+                                "False"
+                            ],
+                            correct: 0,
+                            explanation: "TRUE. Mentors must document and report all developmental assistance costs as part of compliance and financial reporting requirements."
+                        },
+                        {
+                            id: 21,
+                            text: "What happens if a Mentor fails to submit required reports on time?",
+                            options: [
+                                "The Mentor receives a warning and continues the agreement",
+                                "The agreement is automatically extended",
+                                "The Mentor may face penalties, including the termination of the agreement",
+                                "There are no consequences for late submissions"
+                            ],
+                            correct: 2,
+                            explanation: "Under DFARS Appendix I-113(f), the Director of OSBP has authority to terminate agreements for cause, including failure to maintain compliance and timely reporting."
+                        }
+                    ]
+                },
+                {
+                    id: 6,
+                    name: "Module 6: Performance Monitoring and Compliance",
+                    questions: [
+                        {
+                            id: 22,
+                            text: "What is the primary purpose of performance monitoring in the DoD MPP?",
+                            options: [
+                                "To increase the Mentor's revenue",
+                                "To ensure that the developmental goals and milestones outlined in the agreement are being met",
+                                "To replace underperforming Protégés with new candidates",
+                                "To assign new Mentors to Protégés"
+                            ],
+                            correct: 1,
+                            explanation: "Performance monitoring ensures developmental goals, milestones, and compliance requirements in the agreement are being met."
+                        },
+                        {
+                            id: 23,
+                            text: "Which of the following is a common compliance issue in the DoD MPP?",
+                            options: [
+                                "Overachievement of developmental goals",
+                                "Failure to submit required reports on time",
+                                "Excessive communication between Mentor and Protégé",
+                                "Early completion of the agreement"
+                            ],
+                            correct: 1,
+                            explanation: "Reports ensure transparency, track developmental progress, and demonstrate compliance. Failure to submit them on time is a common compliance issue."
+                        },
+                        {
+                            id: 24,
+                            text: "True or False: The DoD OSBP may conduct reviews and audits to ensure compliance with the Mentor-Protégé Agreement.",
+                            options: [
+                                "True",
+                                "False"
+                            ],
+                            correct: 0,
+                            explanation: "TRUE. The DoD OSBP has oversight authority and may conduct reviews and audits to ensure program compliance."
+                        },
+                        {
+                            id: 25,
+                            text: "What action can the DoD OSBP take if a Mentor-Protégé Agreement is found to be non-compliant?",
+                            options: [
+                                "Provide additional funding to resolve the issue",
+                                "Terminate or suspend the agreement",
+                                "Assign a new Mentor to the Protégé",
+                                "Automatically extend the agreement"
+                            ],
+                            correct: 1,
+                            explanation: "The Director, OSBP may terminate agreements for non-performance, misconduct, or non-compliance with DFARS Appendix I or the SOP."
+                        }
+                    ]
+                },
+                {
+                    id: 7,
+                    name: "Module 7: Developmental Assistance",
+                    questions: [
+                        {
+                            id: 26,
+                            text: "Which of the following is a type of developmental assistance that a Mentor can provide under the DoD MPP?",
+                            options: [
+                                "Direct financial investment in the Protégé's equity",
+                                "Technical, managerial, and/or financial assistance",
+                                "Acquisition of the Protégé's company",
+                                "Guaranteed contracts from other government agencies"
+                            ],
+                            correct: 1,
+                            explanation: "Mentors can provide technical, managerial, and financial assistance to develop Protégé capabilities under the program."
+                        },
+                        {
+                            id: 27,
+                            text: "True or False: Under the DoD MPP, developmental assistance can include helping the Protégé develop their business systems, improve technical capabilities, and provide training.",
+                            options: [
+                                "True",
+                                "False"
+                            ],
+                            correct: 0,
+                            explanation: "TRUE. Developmental assistance encompasses business system development, technical capability improvement, and training."
+                        },
+                        {
+                            id: 28,
+                            text: "What must be included in the developmental program outlined in a Mentor-Protégé Agreement?",
+                            options: [
+                                "A list of all subcontracts awarded to the Protégé",
+                                "Specific goals, milestones, and the types of developmental assistance to be provided",
+                                "The Mentor's annual revenue and profit margins",
+                                "A commitment to future joint ventures"
+                            ],
+                            correct: 1,
+                            explanation: "The developmental program must include specific goals, milestones, and detailed descriptions of the types of assistance to be provided."
+                        }
+                    ]
+                },
+                {
+                    id: 8,
+                    name: "Module 8: Subcontracting and Small Business Participation",
+                    questions: [
+                        {
+                            id: 29,
+                            text: "How does participation in the DoD MPP affect a Mentor's small business subcontracting goals?",
+                            options: [
+                                "It reduces the Mentor's overall subcontracting requirements",
+                                "Credit for developmental assistance can be applied toward the Mentor's small business subcontracting goals",
+                                "It eliminates the need for small business subcontracting",
+                                "The Mentor must hire the Protégé as a subcontractor"
+                            ],
+                            correct: 1,
+                            explanation: "Credit agreements allow Mentors to receive credit toward their small business subcontracting goals for developmental assistance provided."
+                        },
+                        {
+                            id: 30,
+                            text: "True or False: A Protégé firm can use the Mentor-Protégé relationship to improve its eligibility for small business set-aside contracts.",
+                            options: [
+                                "True",
+                                "False"
+                            ],
+                            correct: 0,
+                            explanation: "TRUE. Participation does not compromise the Protégé's eligibility for small business certifications (HUBZone, WOSB, SDVOSB, etc.) per DFARS Appendix I-102(d)."
+                        },
+                        {
+                            id: 31,
+                            text: "Which of the following is NOT a type of small business category that can participate as a Protégé in the DoD MPP?",
+                            options: [
+                                "Women-Owned Small Business (WOSB)",
+                                "Service-Disabled Veteran-Owned Small Business (SDVOSB)",
+                                "HUBZone Small Business",
+                                "Large business with small business affiliates"
+                            ],
+                            correct: 3,
+                            explanation: "Large businesses cannot participate as Protégés. Only qualified small businesses (WOSB, SDVOSB, HUBZone, 8(a), etc.) are eligible."
+                        }
+                    ]
+                },
+                {
+                    id: 9,
+                    name: "Module 9: Contract Administration",
+                    questions: [
+                        {
+                            id: 32,
+                            text: "What is the role of the Contracting Officer in a reimbursable Mentor-Protégé Agreement?",
+                            options: [
+                                "To approve the Mentor's developmental assistance program",
+                                "To ensure that reimbursable costs are allowable and properly documented",
+                                "To monitor the Protégé's financial performance",
+                                "To assign a new Mentor if the current one fails"
+                            ],
+                            correct: 1,
+                            explanation: "The Contracting Officer ensures that reimbursable costs are allowable, properly documented, and comply with agreement terms."
+                        },
+                        {
+                            id: 33,
+                            text: "True or False: A Mentor-Protégé Agreement can be modified to extend the period of performance or to add new developmental goals.",
+                            options: [
+                                "True",
+                                "False"
+                            ],
+                            correct: 0,
+                            explanation: "TRUE. MPAs can be modified to extend duration or add developmental goals through proper procedures."
+                        },
+                        {
+                            id: 34,
+                            text: "What is the process for terminating a Mentor-Protégé Agreement?",
+                            options: [
+                                "The Mentor or Protégé can terminate at any time without cause",
+                                "Termination requires mutual agreement, or can be initiated by the DoD OSBP due to non-compliance",
+                                "Only the Protégé can initiate termination",
+                                "The agreement is automatically terminated after 12 months"
+                            ],
+                            correct: 1,
+                            explanation: "Agreements can end by mutual voluntary termination, or be terminated by the Director, OSBP for convenience of the Government or for cause due to non-compliance."
+                        },
+                        {
+                            id: 35,
+                            text: "What happens to the credit or reimbursement for developmental assistance if a Mentor-Protégé Agreement is terminated early?",
+                            options: [
+                                "All credit and reimbursements are forfeited",
+                                "The Mentor retains credit or reimbursement for assistance provided up to the termination date",
+                                "The Mentor is penalized with a reduction in future contract eligibility",
+                                "The Protégé must repay all assistance received"
+                            ],
+                            correct: 1,
+                            explanation: "The Mentor retains credit or reimbursement for developmental assistance legitimately provided and approved prior to the termination date."
+                        },
+                        {
+                            id: 36,
+                            text: "True or False: The Contracting Officer's Representative (COR) is responsible for monitoring the day-to-day performance of a Mentor-Protégé Agreement.",
+                            options: [
+                                "True",
+                                "False"
+                            ],
+                            correct: 0,
+                            explanation: "TRUE. The COR monitors day-to-day performance and ensures agreement terms are being met."
+                        }
+                    ]
+                },
+                {
+                    id: 10,
+                    name: "Module 10: Awards and Recognition",
+                    questions: [
+                        {
+                            id: 37,
+                            text: "What is the purpose of the Nunn-Perry Award in the DoD MPP?",
+                            options: [
+                                "To provide financial bonuses to successful Mentors",
+                                "To recognize outstanding Mentor-Protégé teams for their achievements in the program",
+                                "To offer tax incentives to Protégé firms",
+                                "To reward Mentors for the highest number of Protégé agreements"
+                            ],
+                            correct: 1,
+                            explanation: "The Nunn-Perry Awards recognize Mentor-Protégé teams who have demonstrated exemplary efforts in developing Protégé capabilities."
+                        },
+                        {
+                            id: 38,
+                            text: "True or False: The Nunn-Perry Award is presented annually at a DoD ceremony, recognizing exemplary Mentor-Protégé relationships.",
+                            options: [
+                                "True",
+                                "False"
+                            ],
+                            correct: 0,
+                            explanation: "TRUE. The Nunn-Perry Awards are presented annually to recognize teams that strengthened the defense industrial base before senior DoD leadership."
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // State
+        let currentModuleIndex = null;
+        let currentQuestionIndex = 0;
+        let scores = {};
+        let answers = {};
+        let showingResults = false;
+
+        // Initialize
+        function init() {
+            // Initialize scores and answers for each module
+            quizData.modules.forEach(module => {
+                scores[module.id] = { correct: 0, total: module.questions.length };
+                answers[module.id] = {};
+            });
+            renderModuleGrid();
+            updateTotalScore();
+        }
+
+        // Render module grid
+        function renderModuleGrid() {
+            const grid = document.getElementById('module-grid');
+            grid.innerHTML = '';
+
+            quizData.modules.forEach((module, index) => {
+                const answered = Object.keys(answers[module.id] || {}).length;
+                const total = module.questions.length;
+                const correct = scores[module.id]?.correct || 0;
+
+                let statusClass = '';
+                if (answered === total && correct === total) {
+                    statusClass = 'completed';
+                } else if (answered > 0) {
+                    statusClass = 'in-progress';
+                }
+
+                const card = document.createElement('div');
+                card.className = `module-card ${statusClass}`;
+                card.onclick = () => selectModule(index);
+
+                const shortName = module.name.replace('Module ' + module.id + ': ', '');
+
+                card.innerHTML = `
+                    <div class="module-number">Module ${module.id}</div>
+                    <div class="module-title">${shortName}</div>
+                    <div class="module-progress">
+                        <span class="question-count">${total} questions</span>
+                        <span class="progress-indicator">${correct}/${total}</span>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Select module
+        function selectModule(moduleIndex) {
+            currentModuleIndex = moduleIndex;
+            currentQuestionIndex = 0;
+            showingResults = false;
+
+            document.getElementById('module-grid').style.display = 'none';
+            document.getElementById('results-panel').classList.remove('active');
+            document.getElementById('question-panel').classList.add('active');
+
+            displayQuestion();
+        }
+
+        // Display current question
+        function displayQuestion() {
+            const module = quizData.modules[currentModuleIndex];
+            const question = module.questions[currentQuestionIndex];
+            const moduleAnswers = answers[module.id] || {};
+            const previousAnswer = moduleAnswers[question.id];
+
+            document.getElementById('current-module-name').textContent = module.name;
+            document.getElementById('question-counter').textContent =
+                `Question ${currentQuestionIndex + 1} of ${module.questions.length}`;
+            document.getElementById('question-text').textContent = question.text;
+
+            // Render options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+
+                if (previousAnswer !== undefined) {
+                    optionDiv.classList.add('disabled');
+                    if (index === question.correct) {
+                        optionDiv.classList.add('correct');
+                    } else if (index === previousAnswer && previousAnswer !== question.correct) {
+                        optionDiv.classList.add('incorrect');
+                    }
+                }
+
+                optionDiv.onclick = () => previousAnswer === undefined && selectAnswer(index);
+
+                optionDiv.innerHTML = `
+                    <div class="option-radio"></div>
+                    <div class="option-text">${option}</div>
+                `;
+
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            // Show/hide feedback
+            const feedback = document.getElementById('feedback');
+            if (previousAnswer !== undefined) {
+                feedback.classList.add('show');
+                if (previousAnswer === question.correct) {
+                    feedback.classList.remove('incorrect');
+                    feedback.classList.add('correct');
+                    document.getElementById('feedback-title').innerHTML = '✓ Correct!';
+                } else {
+                    feedback.classList.remove('correct');
+                    feedback.classList.add('incorrect');
+                    document.getElementById('feedback-title').innerHTML = '✗ Incorrect';
+                }
+                document.getElementById('feedback-text').textContent = question.explanation;
+            } else {
+                feedback.classList.remove('show');
+            }
+
+            // Update navigation buttons
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+
+            const nextBtn = document.getElementById('next-btn');
+            if (currentQuestionIndex === module.questions.length - 1) {
+                nextBtn.textContent = 'Finish Module →';
+            } else {
+                nextBtn.textContent = 'Next →';
+            }
+        }
+
+        // Select answer
+        function selectAnswer(letter) {
+            const module = quizData.modules[currentModuleIndex];
+            const question = module.questions[currentQuestionIndex];
+
+            // Store answer
+            if (!answers[module.id]) answers[module.id] = {};
+            answers[module.id][question.id] = letter;
+
+            // Update score
+            if (letter === question.correct) {
+                scores[module.id].correct++;
+            }
+
+            updateTotalScore();
+            displayQuestion();
+        }
+
+        // Navigation
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            const module = quizData.modules[currentModuleIndex];
+
+            if (currentQuestionIndex < module.questions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                // Check if all modules completed
+                const allCompleted = quizData.modules.every(m =>
+                    Object.keys(answers[m.id] || {}).length === m.questions.length
+                );
+
+                if (allCompleted) {
+                    showResults();
+                } else {
+                    closeModule();
+                }
+            }
+        }
+
+        // Close module
+        function closeModule() {
+            currentModuleIndex = null;
+            document.getElementById('question-panel').classList.remove('active');
+            document.getElementById('module-grid').style.display = 'grid';
+            renderModuleGrid();
+        }
+
+        // Update total score
+        function updateTotalScore() {
+            let total = 0;
+            quizData.modules.forEach(m => {
+                total += scores[m.id]?.correct || 0;
+            });
+            document.getElementById('total-score').textContent = total;
+        }
+
+        // Show results
+        function showResults() {
+            showingResults = true;
+            document.getElementById('question-panel').classList.remove('active');
+            document.getElementById('module-grid').style.display = 'none';
+            document.getElementById('results-panel').classList.add('active');
+
+            // Calculate totals
+            let totalCorrect = 0;
+            let totalQuestions = 0;
+            const missed = [];
+
+            quizData.modules.forEach(module => {
+                totalCorrect += scores[module.id]?.correct || 0;
+                totalQuestions += module.questions.length;
+
+                module.questions.forEach(q => {
+                    const answer = answers[module.id]?.[q.id];
+                    if (answer !== undefined && answer !== q.correct) {
+                        missed.push({
+                            module: module.name,
+                            question: q.text,
+                            correct: q.options[q.correct]
+                        });
+                    }
+                });
+            });
+
+            const percentage = Math.round((totalCorrect / totalQuestions) * 100);
+
+            // Update score display
+            const scoreEl = document.getElementById('final-score');
+            scoreEl.textContent = `${totalCorrect}/${totalQuestions}`;
+            scoreEl.className = 'results-score';
+            if (percentage >= 90) scoreEl.classList.add('excellent');
+            else if (percentage >= 70) scoreEl.classList.add('good');
+            else if (percentage >= 50) scoreEl.classList.add('needs-work');
+            else scoreEl.classList.add('poor');
+
+            document.getElementById('final-percentage').textContent = `${percentage}% Correct`;
+
+            // Module breakdown
+            const breakdown = document.getElementById('module-breakdown');
+            breakdown.innerHTML = '<div class="breakdown-title">Module Breakdown</div>';
+
+            quizData.modules.forEach(module => {
+                const correct = scores[module.id]?.correct || 0;
+                const total = module.questions.length;
+                const row = document.createElement('div');
+                row.className = 'breakdown-row';
+
+                let scoreClass = '';
+                if (correct === total) scoreClass = 'perfect';
+                else if (correct > 0) scoreClass = 'partial';
+                else scoreClass = 'zero';
+
+                row.innerHTML = `
+                    <span class="breakdown-module">${module.name}</span>
+                    <span class="breakdown-score ${scoreClass}">${correct}/${total}</span>
+                `;
+                breakdown.appendChild(row);
+            });
+
+            // Missed questions
+            const missedDiv = document.getElementById('missed-questions');
+            if (missed.length > 0) {
+                missedDiv.style.display = 'block';
+                missedDiv.innerHTML = '<div class="missed-title">Questions to Review</div>';
+
+                missed.forEach(item => {
+                    const missedItem = document.createElement('div');
+                    missedItem.className = 'missed-item';
+                    missedItem.innerHTML = `
+                        <div class="missed-question">${item.question.substring(0, 100)}${item.question.length > 100 ? '...' : ''}</div>
+                        <div class="missed-answer">Correct: ${item.correct}</div>
+                    `;
+                    missedDiv.appendChild(missedItem);
+                });
+            } else {
+                missedDiv.style.display = 'none';
+            }
+        }
+
+        // Review missed questions
+        function reviewMissed() {
+            // Find first module with incorrect answers
+            for (let i = 0; i < quizData.modules.length; i++) {
+                const module = quizData.modules[i];
+                for (let j = 0; j < module.questions.length; j++) {
+                    const answer = answers[module.id]?.[module.questions[j].id];
+                    if (answer !== undefined && answer !== module.questions[j].correct) {
+                        currentModuleIndex = i;
+                        currentQuestionIndex = j;
+                        document.getElementById('results-panel').classList.remove('active');
+                        document.getElementById('question-panel').classList.add('active');
+                        displayQuestion();
+                        return;
+                    }
+                }
+            }
+        }
+
+        // Reset quiz
+        function resetQuiz() {
+            scores = {};
+            answers = {};
+            currentModuleIndex = null;
+            currentQuestionIndex = 0;
+            showingResults = false;
+
+            quizData.modules.forEach(module => {
+                scores[module.id] = { correct: 0, total: module.questions.length };
+                answers[module.id] = {};
+            });
+
+            document.getElementById('question-panel').classList.remove('active');
+            document.getElementById('results-panel').classList.remove('active');
+            document.getElementById('module-grid').style.display = 'grid';
+
+            updateTotalScore();
+            renderModuleGrid();
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
